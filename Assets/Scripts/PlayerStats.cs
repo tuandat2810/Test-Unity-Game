@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; // To use UI elements like Sliders
 
 public class PlayerStats : MonoBehaviour
 {
@@ -17,6 +18,32 @@ public class PlayerStats : MonoBehaviour
     public float currentSanity;
     public float maxSanity = 100f;
 
+    // === UI REFERENCES ===
+    [Header("UI Sliders")]
+    public Slider healthSlider;
+    public Slider staminaSlider;
+    public Slider sanitySlider;
+
+    // === START FUNCTION ===
+
+    void Start()
+    {
+        // Set current stats to max on game start
+        currentHealth = maxHealth;
+        currentStamina = maxStamina;
+        currentSanity = maxSanity;
+
+        // Initialize the Sliders' max values
+        // This is important if maxHealth isn't 100
+        healthSlider.maxValue = maxHealth;
+        staminaSlider.maxValue = maxStamina;
+        sanitySlider.maxValue = maxSanity;
+
+        // Update the Sliders' current values
+        healthSlider.value = currentHealth;
+        staminaSlider.value = currentStamina;
+        sanitySlider.value = currentSanity;
+    }
 
     // === PUBLIC UTILITY FUNCTIONS ===
     // Other scripts (like Gym, Combat) will call these functions
