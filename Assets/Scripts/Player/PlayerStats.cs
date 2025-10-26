@@ -73,6 +73,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentStamina += amount;
         currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+        staminaSlider.value = currentStamina;
         Debug.Log("Stamina restored: " + currentStamina);
     }
 
