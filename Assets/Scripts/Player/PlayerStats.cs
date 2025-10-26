@@ -28,18 +28,14 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        // Set current stats to max on game start
-        currentHealth = maxHealth;
-        currentStamina = maxStamina;
-        currentSanity = maxSanity;
-
-        // Initialize the Sliders' max values
-        // This is important if maxHealth isn't 100
+        // 1. Initialize the Sliders' MAX values
+        // (This is important, sets the 100% point)
         healthSlider.maxValue = maxHealth;
         staminaSlider.maxValue = maxStamina;
         sanitySlider.maxValue = maxSanity;
 
-        // Update the Sliders' current values
+        // 2. Update the Sliders' CURRENT values
+        // (This reads the values you set in the Inspector, e.g., 50)
         healthSlider.value = currentHealth;
         staminaSlider.value = currentStamina;
         sanitySlider.value = currentSanity;
