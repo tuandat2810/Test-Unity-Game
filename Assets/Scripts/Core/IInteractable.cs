@@ -7,4 +7,5 @@ public interface IInteractable
 {
     // The "PlayerStats stats" parameter is new
     void Interact(PlayerStats stats);
+    string InteractionPrompt {  get; }
 }
