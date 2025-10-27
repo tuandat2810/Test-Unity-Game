@@ -4,18 +4,16 @@ using UnityEngine.UI; // To use UI elements like Sliders
 public class PlayerStats : MonoBehaviour
 {
     // === STATS VARIABLES ===
-    // Using [Header] to organize the Inspector
-
     [Header("Health Stats")]
-    public float currentHealth;
+    public float currentHealth = 75f; // Set default to 75
     public float maxHealth = 100f;
 
     [Header("Stamina Stats")]
-    public float currentStamina;
+    public float currentStamina = 75f; // Set default to 75
     public float maxStamina = 100f;
 
     [Header("Sanity Stats")]
-    public float currentSanity;
+    public float currentSanity = 75f; // Set default to 75
     public float maxSanity = 100f;
 
     // === UI REFERENCES ===
@@ -29,35 +27,33 @@ public class PlayerStats : MonoBehaviour
     void Start()
     {
         // 1. Initialize the Sliders' MAX values
-        // (This is important, sets the 100% point)
         healthSlider.maxValue = maxHealth;
         staminaSlider.maxValue = maxStamina;
         sanitySlider.maxValue = maxSanity;
 
         // 2. Update the Sliders' CURRENT values
-        // (This reads the values you set in the Inspector, e.g., 50)
+        // (This will now read 75 from the variables above)
         healthSlider.value = currentHealth;
         staminaSlider.value = currentStamina;
         sanitySlider.value = currentSanity;
     }
 
     // === PUBLIC UTILITY FUNCTIONS ===
-    // Other scripts (like Gym, Combat) will call these functions
 
     // --- HEALTH FUNCTIONS ---
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        // Ensure health never drops below 0
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-        Debug.Log("Health remaining: " + currentHealth); // Log to console for testing
+        healthSlider.value = currentHealth; // <-- FIXED
+        Debug.Log("Health remaining: " + currentHealth);
     }
 
     public void Heal(float amount)
     {
         currentHealth += amount;
-        // Ensure health never exceeds the max value
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        healthSlider.value = currentHealth; // <-- FIXED
         Debug.Log("Health restored: " + currentHealth);
     }
 
@@ -66,6 +62,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentStamina -= amount;
         currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+        staminaSlider.value = currentStamina; // <-- FIXED
         Debug.Log("Stamina remaining: " + currentStamina);
     }
 
@@ -73,7 +70,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentStamina += amount;
         currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
-        staminaSlider.value = currentStamina;
+        staminaSlider.value = currentStamina; // This one was already correct
         Debug.Log("Stamina restored: " + currentStamina);
     }
 
@@ -82,6 +79,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentSanity -= amount;
         currentSanity = Mathf.Clamp(currentSanity, 0f, maxSanity);
+        sanitySlider.value = currentSanity; // <-- FIXED
         Debug.Log("Sanity remaining: " + currentSanity);
     }
 
@@ -89,6 +87,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentSanity += amount;
         currentSanity = Mathf.Clamp(currentSanity, 0f, maxSanity);
+        sanitySlider.value = currentSanity; // <-- FIXED
         Debug.Log("Sanity restored: " + currentSanity);
     }
 }
