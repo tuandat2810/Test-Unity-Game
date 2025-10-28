@@ -14,13 +14,9 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody2D>();
-            rb.gravityScale = 0; // turnoff gravity
-        }
+        rb.gravityScale = 0; // turnoff gravity
 
-        dominantInput = new Vector2(0, -1);
+        dominantInput = new Vector2(0, -1); // Default facing down
     }
 
     void Update()
@@ -28,11 +24,12 @@ public class PlayerMovement : MonoBehaviour
         float rawX = Input.GetAxisRaw("Horizontal");
         float rawY = Input.GetAxisRaw("Vertical");
 
+        // --- ANIMATOR LOGIC IS ALWAYS ON ---
         moveInput = new Vector2(rawX, rawY).normalized;
 
         if (moveInput.sqrMagnitude > 0.01f)
         {
-            // W + D -> go D
+            // Prioritize horizontal or vertical animation
             if (Mathf.Abs(rawX) > Mathf.Abs(rawY))
             {
                 dominantInput = new Vector2(rawX, 0);
@@ -52,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     { // Move player
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime); }
+        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime); 
     }
+}
 

@@ -27,25 +27,39 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
-        // 1. TÌM KIẾM: Luôn tìm vật thể ở gần
+        // === NEW STATE CHECK ===
+        // Check the state from PlayerStats.cs
+        if (playerStats.currentState == PlayerStats.PlayerState.Combat)
+        {
+            // If we are in COMBAT, do nothing. Hide the UI and stop.
+            if (promptText != null && promptText.gameObject.activeSelf)
+            {
+                promptText.gameObject.SetActive(false);
+            }
+            currentInteractable = null; // Clear any target
+            return; // Stop the Update() function here
+        }
+
+        // --- ALL LOGIC BELOW ONLY RUNS IF STATE IS "OVERWORLD" ---
+        // 1. Find: Interactable object Around
         currentInteractable = FindNearbyInteractable();
 
-        // 2. HIỂN THỊ UI (nếu tìm thấy)
+        // 2. Show if found Interactable object
         if (currentInteractable != null)
         {
-            // Cập nhật nội dung text
+            // Update text
             string message = currentInteractable.InteractionPrompt;
-            promptText.text = $"[F] {message}"; // Ví dụ: "[F] Use Gym"
+            promptText.text = $"[F] {message}"; // Ex: "[F] Use Gym"
 
-            // Cập nhật vị trí text
+            // Text position
             Vector3 worldPos = transform.position + promptOffset;
             Vector3 screenPos = mainCamera.WorldToScreenPoint(worldPos);
             promptText.transform.position = screenPos;
 
-            // Hiển thị text
+            // Show text
             promptText.gameObject.SetActive(true);
 
-            // 3. HÀNH ĐỘNG (nếu nhấn phím)
+            // 3. Interact if user press F
             if (Input.GetKeyDown(KeyCode.F))
             {
                 currentInteractable.Interact(playerStats);
@@ -53,13 +67,13 @@ public class PlayerInteraction : MonoBehaviour
         }
         else
         {
-            // 4. ẨN UI (nếu không tìm thấy)
+            // 4. HIde if found nothing
             if (promptText != null)
                 promptText.gameObject.SetActive(false);
         }
     }
 
-    // Hàm tìm vật thể
+    // Found interactable obj func
     private IInteractable FindNearbyInteractable()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius);
@@ -69,10 +83,10 @@ public class PlayerInteraction : MonoBehaviour
             IInteractable interactable = collider.GetComponent<IInteractable>();
             if (interactable != null)
             {
-                return interactable; // Trả về vật thể đầu tiên tìm thấy
+                return interactable; // Return First Object Interactable found
             }
         }
-        return null; // Không tìm thấy gì
+        return null; // Found nothing Interactable
     }
 
     private void OnDrawGizmosSelected()

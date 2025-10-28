@@ -5,15 +5,15 @@ public class PlayerStats : MonoBehaviour
 {
     // === STATS VARIABLES ===
     [Header("Health Stats")]
-    public float currentHealth = 75f; // Set default to 75
+    public float currentHealth = 75f;
     public float maxHealth = 100f;
 
     [Header("Stamina Stats")]
-    public float currentStamina = 75f; // Set default to 75
+    public float currentStamina = 75f;
     public float maxStamina = 100f;
 
     [Header("Sanity Stats")]
-    public float currentSanity = 75f; // Set default to 75
+    public float currentSanity = 75f;
     public float maxSanity = 100f;
 
     // === UI REFERENCES ===
@@ -22,20 +22,46 @@ public class PlayerStats : MonoBehaviour
     public Slider staminaSlider;
     public Slider sanitySlider;
 
-    // === START FUNCTION ===
 
+    // === PLAYER STATE ===
+    // This script now owns the player's state
+    public enum PlayerState
+    {
+        Overworld,  // exploration status
+        Combat      // fighting status
+    }
+    public PlayerState currentState;
+
+
+    // === START FUNCTION ===
     void Start()
     {
-        // 1. Initialize the Sliders' MAX values
+        // 1. Initialize Sliders' MAX values
         healthSlider.maxValue = maxHealth;
         staminaSlider.maxValue = maxStamina;
         sanitySlider.maxValue = maxSanity;
 
-        // 2. Update the Sliders' CURRENT values
-        // (This will now read 75 from the variables above)
+        // 2. Update Sliders' CURRENT values
         healthSlider.value = currentHealth;
         staminaSlider.value = currentStamina;
         sanitySlider.value = currentSanity;
+
+        // Start the game in Overworld state
+        currentState = PlayerState.Overworld;
+    }
+
+    // === STATE CHANGING FUNCTIONS (NEW) ===
+    // Functions to change the state are now here
+    public void EnterCombatState()
+    {
+        currentState = PlayerState.Combat;
+        Debug.Log("State changed to: COMBAT");
+    }
+
+    public void ExitCombatState()
+    {
+        currentState = PlayerState.Overworld;
+        Debug.Log("State changed to: OVERWORLD");
     }
 
     // === PUBLIC UTILITY FUNCTIONS ===
@@ -45,7 +71,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-        healthSlider.value = currentHealth; // <-- FIXED
+        healthSlider.value = currentHealth;
         Debug.Log("Health remaining: " + currentHealth);
     }
 
@@ -53,7 +79,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-        healthSlider.value = currentHealth; // <-- FIXED
+        healthSlider.value = currentHealth;
         Debug.Log("Health restored: " + currentHealth);
     }
 
@@ -62,7 +88,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentStamina -= amount;
         currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
-        staminaSlider.value = currentStamina; // <-- FIXED
+        staminaSlider.value = currentStamina;
         Debug.Log("Stamina remaining: " + currentStamina);
     }
 
@@ -70,7 +96,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentStamina += amount;
         currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
-        staminaSlider.value = currentStamina; // This one was already correct
+        staminaSlider.value = currentStamina;
         Debug.Log("Stamina restored: " + currentStamina);
     }
 
@@ -79,7 +105,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentSanity -= amount;
         currentSanity = Mathf.Clamp(currentSanity, 0f, maxSanity);
-        sanitySlider.value = currentSanity; // <-- FIXED
+        sanitySlider.value = currentSanity;
         Debug.Log("Sanity remaining: " + currentSanity);
     }
 
@@ -87,7 +113,7 @@ public class PlayerStats : MonoBehaviour
     {
         currentSanity += amount;
         currentSanity = Mathf.Clamp(currentSanity, 0f, maxSanity);
-        sanitySlider.value = currentSanity; // <-- FIXED
+        sanitySlider.value = currentSanity;
         Debug.Log("Sanity restored: " + currentSanity);
     }
-}
+} 
