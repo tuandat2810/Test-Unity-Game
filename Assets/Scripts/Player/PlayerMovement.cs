@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Animator anim;
 
+    public Vector2 LastFacingDirection { get; private set; }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -16,7 +18,8 @@ public class PlayerMovement : MonoBehaviour
 
         rb.gravityScale = 0; // turnoff gravity
 
-        dominantInput = new Vector2(0, -1); // Default facing down
+        dominantInput = new Vector2(1, 0); // Default facing right
+        LastFacingDirection = dominantInput;
     }
 
     void Update()
@@ -39,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 dominantInput = new Vector2(0, rawY);
             }
+
+            LastFacingDirection = dominantInput.normalized;
         }
 
         anim.SetFloat("Speed", moveInput.sqrMagnitude);

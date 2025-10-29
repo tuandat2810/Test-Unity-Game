@@ -639,10 +639,10 @@ MonoBehaviour:
   punchStaminaCost: 10
   punchDamage: 5
   punchRange: 0.5
-  punchPoint: {fileID: 0}
+  punchPoint: {fileID: 756725625}
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
 --- !u!1 &362264034
 GameObject:
   m_ObjectHideFlags: 0

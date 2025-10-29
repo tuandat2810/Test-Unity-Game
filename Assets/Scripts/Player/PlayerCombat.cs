@@ -1,97 +1,108 @@
 using UnityEngine;
 
-// Automatically add required components
+// We removed SpriteRenderer, as we now have 4 dedicated animations
 [RequireComponent(typeof(PlayerStats))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerMovement))]
 public class PlayerCombat : MonoBehaviour
 {
-    // We need references to other components on the Player
+    // References
     private PlayerStats playerStats;
     private Animator anim;
-    // We don't need PlayerMovement, as it runs independently.
+    private PlayerMovement playerMovement; // Needed to get direction
 
-    [Header("Combat Stats")]
-    public float punchStaminaCost = 10f; // As per your design doc
+    [Header("Stamina Costs")]
+    public float punchStaminaCost = 10f;
 
     [Header("Punch Attack")]
-    public float punchDamage = 5f;        // How much damage the punch deals
-    public float punchRange = 0.5f;     // How far the punch reaches
-    public Transform punchPoint;        // The center of the punch (set this in Inspector)
-    public LayerMask enemyLayer;        // Which layer to hit (set this in Inspector)
+    public float punchDamage = 5f;
+    public float punchRange = 0.5f;
+    public LayerMask enemyLayer;
+
+    [Header("Punch Offset")]
+    public float punchOffset = 0.5f; // How far the punch reaches out
 
     void Start()
     {
-        // Get the components
         playerStats = GetComponent<PlayerStats>();
         anim = GetComponent<Animator>();
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
     void Update()
     {
-        // === NEW STATE CHECK ===
-        // First, check if we are in the "Combat" state.
         if (playerStats.currentState != PlayerStats.PlayerState.Combat)
-        {
-            return; // If not, do nothing.
-        }
+            return; // Not in combat
 
-        // --- ALL LOGIC BELOW ONLY RUNS IF STATE IS "COMBAT" ---
-
-        // Check for Left Mouse Button ("Fire1" is the default)
+        // Check for Left Mouse Button
         if (Input.GetButtonDown("Fire1"))
         {
             Punch();
         }
-
-        // (Future) Check for Right Mouse Button (Block)
-        // if (Input.GetButtonDown("Fire2")) { Block(); }
-
-        // (Future) Check for Spacebar (Dodge)
-        // if (Input.GetKeyDown(KeyCode.Space)) { Dodge(); }
     }
 
     private void Punch()
     {
-        // Check for stamina
         if (playerStats.currentStamina < punchStaminaCost)
         {
             Debug.Log("Not enough stamina to punch!");
-            return; // Stop the function here
+            return;
         }
 
-        // 1. Use stamina
+        // 1. Use Stamina
         playerStats.UseStamina(punchStaminaCost);
 
-        // 2. Play animation (Future)
-        // anim.SetTrigger("Punch"); 
+        // 2. Get the facing direction from PlayerMovement
+        Vector2 punchDirection = playerMovement.LastFacingDirection;
 
-        Debug.Log("Player Punched!");
+        // 3. Trigger the correct 4-way animation
+        // This logic checks Y-axis (Up/Down) first
+        if (punchDirection.y > 0.5f)
+        {
+            anim.SetTrigger("PunchUp");
+        }
+        else if (punchDirection.y < -0.5f)
+        {
+            anim.SetTrigger("PunchDown");
+        }
+        // If not Up/Down, check X-axis (Left/Right)
+        else if (punchDirection.x < -0.5f)
+        {
+            anim.SetTrigger("PunchLeft");
+        }
+        else // (punchDirection.x > 0.5f) or default
+        {
+            anim.SetTrigger("PunchRight");
+        }
 
-        // 3. --- NEW: DETECT HIT ---
-        // Find all colliders in a small circle in front of the player
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(punchPoint.position, punchRange, enemyLayer);
+        // 4. Calculate the Hitbox Position
+        // (This code works for all 4 directions)
+        Vector2 punchPointPosition = (Vector2)transform.position + (punchDirection * punchOffset);
 
-        // 4. --- NEW: DEAL DAMAGE ---
-        // Loop through all enemies hit and apply damage
+        // 5. Detect Hits
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(punchPointPosition, punchRange, enemyLayer);
+
+        // 6. Deal Damage
         foreach (Collider2D enemy in hitEnemies)
         {
-            // Try to get the NPC script from the object we hit
             PrisonerNPC npc = enemy.GetComponent<PrisonerNPC>();
             if (npc != null)
             {
-                // If it's a valid NPC, make it take damage
                 npc.TakeDamage(punchDamage);
             }
         }
     }
 
-    // This draws a red circle in the Scene view so you can see your punch range
+    // Draws the red hitbox circle in the editor
     private void OnDrawGizmosSelected()
     {
-        if (punchPoint == null)
-            return;
+        if (playerMovement == null)
+            playerMovement = GetComponent<PlayerMovement>();
+
+        Vector2 punchDirection = playerMovement ? playerMovement.LastFacingDirection : new Vector2(1, 0);
+        Vector2 punchPointPosition = (Vector2)transform.position + (punchDirection * punchOffset);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(punchPoint.position, punchRange);
+        Gizmos.DrawWireSphere(punchPointPosition, punchRange);
     }
 }
