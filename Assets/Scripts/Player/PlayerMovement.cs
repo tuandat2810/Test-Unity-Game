@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     { // Move player
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime); 
+        rb.linearVelocity = moveInput * moveSpeed;
     }
 }
 
