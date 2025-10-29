@@ -12,7 +12,12 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Combat Stats")]
     public float punchStaminaCost = 10f; // As per your design doc
-    // public float punchDamage = 5f; // We can add this later
+
+    [Header("Punch Attack")]
+    public float punchDamage = 5f;        // How much damage the punch deals
+    public float punchRange = 0.5f;     // How far the punch reaches
+    public Transform punchPoint;        // The center of the punch (set this in Inspector)
+    public LayerMask enemyLayer;        // Which layer to hit (set this in Inspector)
 
     void Start()
     {
@@ -47,23 +52,46 @@ public class PlayerCombat : MonoBehaviour
 
     private void Punch()
     {
-        // Check if we have enough stamina
-        if (playerStats.currentStamina >= punchStaminaCost)
-        {
-            // 1. Use stamina
-            playerStats.UseStamina(punchStaminaCost);
-
-            // 2. Play animation (We will set this up in the Animator later)
-            // anim.SetTrigger("Punch"); 
-
-            Debug.Log("Player Punched! Stamina left: " + playerStats.currentStamina);
-
-            // 3. (Future) Detect enemy and deal damage
-            // DealDamageToEnemy();
-        }
-        else
+        // Check for stamina
+        if (playerStats.currentStamina < punchStaminaCost)
         {
             Debug.Log("Not enough stamina to punch!");
+            return; // Stop the function here
         }
+
+        // 1. Use stamina
+        playerStats.UseStamina(punchStaminaCost);
+
+        // 2. Play animation (Future)
+        // anim.SetTrigger("Punch"); 
+
+        Debug.Log("Player Punched!");
+
+        // 3. --- NEW: DETECT HIT ---
+        // Find all colliders in a small circle in front of the player
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(punchPoint.position, punchRange, enemyLayer);
+
+        // 4. --- NEW: DEAL DAMAGE ---
+        // Loop through all enemies hit and apply damage
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            // Try to get the NPC script from the object we hit
+            PrisonerNPC npc = enemy.GetComponent<PrisonerNPC>();
+            if (npc != null)
+            {
+                // If it's a valid NPC, make it take damage
+                npc.TakeDamage(punchDamage);
+            }
+        }
+    }
+
+    // This draws a red circle in the Scene view so you can see your punch range
+    private void OnDrawGizmosSelected()
+    {
+        if (punchPoint == null)
+            return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(punchPoint.position, punchRange);
     }
 }
