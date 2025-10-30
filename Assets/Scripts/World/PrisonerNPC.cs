@@ -7,12 +7,17 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     [Header("Info")]
     [SerializeField] private string npcName = "Rival Prisoner";
 
+    [Header("Effects")]
+    public GameObject damageTextPrefab; 
+    public Vector3 textSpawnOffset = new Vector3(0, 1f, 0); 
+    // ---
+
     [Header("Combat Stats")]
     public float currentHealth = 50f;
     public float maxHealth = 50f;
     public float moveSpeed = 2f;      // NPC's movement speed
     public float attackDamage = 5f;   // Damage dealt by NPC
-    public float attackRange = 1f;  // Attack range (should be close)
+    public float attackRange = 1.2f;  // Attack range 
     public float attackCooldown = 1.5f; // Time between attacks
     public float detectionRange = 5f; // "Sight" range to start chasing
 
@@ -125,6 +130,22 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
         Debug.Log($"{npcName} took {damageAmount} damage. Health: {currentHealth}");
+
+        // --- SPAM DAMAGE TEXT LOGIC ---
+        if (damageTextPrefab != null)
+        {
+            // 1. Create the text object from the prefab
+            Vector3 spawnPosition = transform.position + textSpawnOffset;
+            GameObject textGO = Instantiate(damageTextPrefab, spawnPosition, Quaternion.identity);
+
+            // 2. Get the script and set the text
+            DamageText damageTextScript = textGO.GetComponent<DamageText>();
+            if (damageTextScript != null)
+            {
+                // Set text (e.g., "5") and color (e.g., White)
+                damageTextScript.SetText(damageAmount.ToString(), Color.white);
+            }
+        }
 
         // Check if the NPC is defeated
         if (currentHealth <= 0)
