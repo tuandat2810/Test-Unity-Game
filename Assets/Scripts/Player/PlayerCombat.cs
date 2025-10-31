@@ -35,7 +35,7 @@ public class PlayerCombat : MonoBehaviour
             return; // Not in combat
 
         // Check for Left Mouse Button
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             Punch();
         }
