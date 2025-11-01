@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerStats))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(InventoryManager))]
 public class PlayerCombat : MonoBehaviour
 {
     // References
@@ -22,11 +23,14 @@ public class PlayerCombat : MonoBehaviour
     [Header("Punch Offset")]
     public float punchOffset = 0.5f; // How far the punch reaches out
 
+    private InventoryManager inventoryManager;
+
     void Start()
     {
         playerStats = GetComponent<PlayerStats>();
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
+        inventoryManager = GetComponent<InventoryManager>();
     }
 
     void Update()
@@ -38,6 +42,19 @@ public class PlayerCombat : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J))
         {
             Punch();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) 
+        {
+            inventoryManager.UseItem(0); 
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) 
+        {
+            inventoryManager.UseItem(1); 
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) 
+        {
+            inventoryManager.UseItem(2); 
         }
     }
 
