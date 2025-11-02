@@ -1,7 +1,9 @@
 using UnityEngine;
+using System.Collections;
 
 // Require the NPC to have a Rigidbody2D for movement
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class PrisonerNPC : MonoBehaviour, IInteractable
 {
     [Header("Info")]
@@ -10,6 +12,8 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     [Header("Effects")]
     public GameObject damageTextPrefab; 
     public Vector3 textSpawnOffset = new Vector3(0, 1f, 0); 
+    public Material flashMaterial;
+    public float flashDuration = 0.1f;
     // ---
 
     [Header("Combat Stats")]
@@ -26,7 +30,9 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     // Components
     private Rigidbody2D rb;
     private PlayerStats player; // Store the player reference
-
+    private SpriteRenderer spriteRenderer;
+    private Material originalMaterial;
+    private Coroutine flashCoroutine;
     // === NPC STATE MACHINE ===
     private enum State
     {
@@ -42,6 +48,9 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0; // Ensure no gravity
         currentState = State.Idle;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalMaterial = spriteRenderer.material;
     }
 
     // This implements the IInteractable contract
@@ -131,6 +140,8 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
 
         Debug.Log($"{npcName} took {damageAmount} damage. Health: {currentHealth}");
 
+        FlashEffect();
+
         // --- SPAM DAMAGE TEXT LOGIC ---
         if (damageTextPrefab != null)
         {
@@ -152,6 +163,23 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         {
             Die();
         }
+    }
+
+    public void FlashEffect()
+    {
+        if (flashCoroutine != null)
+        {
+            StopCoroutine(flashCoroutine);
+        }
+        flashCoroutine = StartCoroutine(FlashCoroutine());
+    }
+
+    private IEnumerator FlashCoroutine()
+    {
+        spriteRenderer.material = flashMaterial;
+        yield return new WaitForSeconds(flashDuration);
+        spriteRenderer.material = originalMaterial;
+        flashCoroutine = null;
     }
 
     private void Die()

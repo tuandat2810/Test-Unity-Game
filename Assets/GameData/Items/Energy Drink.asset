@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65c4eefdbb1bec40b9d9a646b05047e, type: 3}
   m_Name: Energy Drink
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: New Item
+  itemName: Energy Drink
   description: Item Description
-  icon: {fileID: 0}
+  icon: {fileID: -673990736430130598, guid: 755d7d89031efc54193e79ea61862c98, type: 3}
   itemType: 0
   healAmount: 0
-  staminaAmount: 0
+  staminaAmount: 25
   sanityAmount: 0
