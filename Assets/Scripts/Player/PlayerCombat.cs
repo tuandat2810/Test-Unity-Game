@@ -25,7 +25,7 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Attack Effects")]
     public GameObject slashEffectPrefab; 
-    public Vector3 effectOffset = new Vector3(0.5f, 0, 0);
+    public float effectOffset = 0.5f;
 
     private InventoryManager inventoryManager;
 
@@ -99,11 +99,11 @@ public class PlayerCombat : MonoBehaviour
         // --- NEW: SPAWN SLASH EFFECT ---
         if (slashEffectPrefab != null)
         {
-            Vector2 spawnPos = (Vector2)transform.position + (punchDirection * effectOffset.x);
+            Vector2 spawnPos = (Vector2)transform.position + (punchDirection * effectOffset);
 
             float angle = Mathf.Atan2(punchDirection.y, punchDirection.x) * Mathf.Rad2Deg;
             Quaternion rotation = Quaternion.Euler(0, 0, angle);
-    
+
             Instantiate(slashEffectPrefab, spawnPos, rotation);
         }
 
