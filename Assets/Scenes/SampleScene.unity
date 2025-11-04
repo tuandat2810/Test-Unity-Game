@@ -3028,6 +3028,8 @@ MonoBehaviour:
   npcName: Rival Prisoner
   damageTextPrefab: {fileID: 50962635380090958, guid: 2420825452f32ec48943f766539362be, type: 3}
   textSpawnOffset: {x: 0, y: 1, z: 0}
+  flashMaterial: {fileID: 2100000, guid: 9b7d615587d8c9545ad1e0ca8f5b2be8, type: 2}
+  flashDuration: 0.1
   currentHealth: 50
   maxHealth: 50
   moveSpeed: 2
@@ -3265,8 +3267,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 25}
-  m_SizeDelta: {x: 450, y: 50}
+  m_AnchoredPosition: {x: 0, y: 30}
+  m_SizeDelta: {x: 360, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1336848470
 GameObject:

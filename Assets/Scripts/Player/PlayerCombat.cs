@@ -23,6 +23,10 @@ public class PlayerCombat : MonoBehaviour
     [Header("Punch Offset")]
     public float punchOffset = 0.5f; // How far the punch reaches out
 
+    [Header("Attack Effects")]
+    public GameObject slashEffectPrefab; 
+    public Vector3 effectOffset = new Vector3(0.5f, 0, 0);
+
     private InventoryManager inventoryManager;
 
     void Start()
@@ -90,6 +94,17 @@ public class PlayerCombat : MonoBehaviour
         else // (punchDirection.x > 0.5f) or default
         {
             anim.SetTrigger("PunchRight");
+        }
+
+        // --- NEW: SPAWN SLASH EFFECT ---
+        if (slashEffectPrefab != null)
+        {
+            Vector2 spawnPos = (Vector2)transform.position + (punchDirection * effectOffset.x);
+
+            float angle = Mathf.Atan2(punchDirection.y, punchDirection.x) * Mathf.Rad2Deg;
+            Quaternion rotation = Quaternion.Euler(0, 0, angle);
+    
+            Instantiate(slashEffectPrefab, spawnPos, rotation);
         }
 
         // 4. Calculate the Hitbox Position
