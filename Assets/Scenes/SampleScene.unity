@@ -607,6 +607,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   punchOffset: 0.5
+  slashEffectPrefab: {fileID: 9056885727900815307, guid: c5a1a7c8a4373ac47acacd04eae306cf, type: 3}
+  effectOffset: 0.5
 --- !u!114 &175019039
 MonoBehaviour:
   m_ObjectHideFlags: 0

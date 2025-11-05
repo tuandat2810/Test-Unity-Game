@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// We removed SpriteRenderer, as we now have 4 dedicated animations
 [RequireComponent(typeof(PlayerStats))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(PlayerMovement))]
@@ -10,7 +9,7 @@ public class PlayerCombat : MonoBehaviour
     // References
     private PlayerStats playerStats;
     private Animator anim;
-    private PlayerMovement playerMovement; // Needed to get direction
+    private PlayerMovement playerMovement; 
 
     [Header("Stamina Costs")]
     public float punchStaminaCost = 10f;
@@ -20,12 +19,11 @@ public class PlayerCombat : MonoBehaviour
     public float punchRange = 0.5f;
     public LayerMask enemyLayer;
 
-    [Header("Punch Offset")]
-    public float punchOffset = 0.5f; // How far the punch reaches out
+    [Header("Attack Offset")]
+    public Vector2 attackOffset = new Vector2(0.5f, 0f); 
 
     [Header("Attack Effects")]
-    public GameObject slashEffectPrefab; 
-    public float effectOffset = 0.5f;
+    public GameObject slashEffectPrefab;
 
     private InventoryManager inventoryManager;
 
@@ -39,26 +37,19 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
+        // (Inventory input checks are correct)
+        if (Input.GetKeyDown(KeyCode.Alpha1)) inventoryManager.UseItem(0); 
+        if (Input.GetKeyDown(KeyCode.Alpha2)) inventoryManager.UseItem(1); 
+        if (Input.GetKeyDown(KeyCode.Alpha3)) inventoryManager.UseItem(2); 
+        
+        // Check state
         if (playerStats.currentState != PlayerStats.PlayerState.Combat)
-            return; // Not in combat
+            return; 
 
-        // Check for Left Mouse Button
+        // Check for attack input
         if (Input.GetKeyDown(KeyCode.J))
         {
             Punch();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1)) 
-        {
-            inventoryManager.UseItem(0); 
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) 
-        {
-            inventoryManager.UseItem(1); 
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) 
-        {
-            inventoryManager.UseItem(2); 
         }
     }
 
@@ -73,48 +64,34 @@ public class PlayerCombat : MonoBehaviour
         // 1. Use Stamina
         playerStats.UseStamina(punchStaminaCost);
 
-        // 2. Get the facing direction from PlayerMovement
+        // 2. Get direction
         Vector2 punchDirection = playerMovement.LastFacingDirection;
 
-        // 3. Trigger the correct 4-way animation
-        // This logic checks Y-axis (Up/Down) first
-        if (punchDirection.y > 0.5f)
-        {
-            anim.SetTrigger("PunchUp");
-        }
-        else if (punchDirection.y < -0.5f)
-        {
-            anim.SetTrigger("PunchDown");
-        }
-        // If not Up/Down, check X-axis (Left/Right)
-        else if (punchDirection.x < -0.5f)
-        {
-            anim.SetTrigger("PunchLeft");
-        }
-        else // (punchDirection.x > 0.5f) or default
-        {
-            anim.SetTrigger("PunchRight");
-        }
+        // 3. Trigger Animation
+        if (punchDirection.y > 0.5f) anim.SetTrigger("PunchUp");
+        else if (punchDirection.y < -0.5f) anim.SetTrigger("PunchDown");
+        else if (punchDirection.x < -0.5f) anim.SetTrigger("PunchLeft");
+        else anim.SetTrigger("PunchRight");
 
-        // --- NEW: SPAWN SLASH EFFECT ---
+        // --- CALCULATE POSITION (FOR BOTH FX AND HITBOX) ---
+        float angle = Mathf.Atan2(punchDirection.y, punchDirection.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.Euler(0, 0, angle);
+
+        Vector2 rotatedOffset = rotation * attackOffset;
+        Vector2 spawnPosition = (Vector2)transform.position + rotatedOffset;
+
+        // --- SPAWN SLASH EFFECT ---
         if (slashEffectPrefab != null)
         {
-            Vector2 spawnPos = (Vector2)transform.position + (punchDirection * effectOffset);
-
-            float angle = Mathf.Atan2(punchDirection.y, punchDirection.x) * Mathf.Rad2Deg;
-            Quaternion rotation = Quaternion.Euler(0, 0, angle);
-
-            Instantiate(slashEffectPrefab, spawnPos, rotation);
+            Instantiate(slashEffectPrefab, spawnPosition, rotation);
         }
 
-        // 4. Calculate the Hitbox Position
-        // (This code works for all 4 directions)
-        Vector2 punchPointPosition = (Vector2)transform.position + (punchDirection * punchOffset);
+        // --- DETECT HITS ---
+        // We removed the old "punchPointPosition" variable
+        // We now use "spawnPosition" for the hitbox center
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(spawnPosition, punchRange, enemyLayer); // <-- FIXED LINE
 
-        // 5. Detect Hits
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(punchPointPosition, punchRange, enemyLayer);
-
-        // 6. Deal Damage
+        // --- DEAL DAMAGE ---
         foreach (Collider2D enemy in hitEnemies)
         {
             PrisonerNPC npc = enemy.GetComponent<PrisonerNPC>();
@@ -125,15 +102,19 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    // Draws the red hitbox circle in the editor
+    // (OnDrawGizmosSelected function is already correct)
     private void OnDrawGizmosSelected()
     {
         if (playerMovement == null)
             playerMovement = GetComponent<PlayerMovement>();
 
         Vector2 punchDirection = playerMovement ? playerMovement.LastFacingDirection : new Vector2(1, 0);
-        Vector2 punchPointPosition = (Vector2)transform.position + (punchDirection * punchOffset);
 
+        float angle = Mathf.Atan2(punchDirection.y, punchDirection.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.Euler(0, 0, angle);
+        Vector2 rotatedOffset = rotation * attackOffset;
+        Vector2 punchPointPosition = (Vector2)transform.position + rotatedOffset;
+        
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(punchPointPosition, punchRange);
     }
