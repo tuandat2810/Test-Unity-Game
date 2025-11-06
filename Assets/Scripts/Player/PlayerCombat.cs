@@ -11,96 +11,78 @@ public class PlayerCombat : MonoBehaviour
     private Animator anim;
     private PlayerMovement playerMovement; 
 
-    [Header("Stamina Costs")]
-    public float punchStaminaCost = 10f;
-
     [Header("Punch Attack")]
-    public float punchDamage = 5f;
     public float punchRange = 0.5f;
     public LayerMask enemyLayer;
-
-    [Header("Attack Offset")]
     public Vector2 attackOffset = new Vector2(0.5f, 0f); 
-
-    [Header("Attack Effects")]
     public GameObject slashEffectPrefab;
 
-    private InventoryManager inventoryManager;
 
     void Start()
     {
         playerStats = GetComponent<PlayerStats>();
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
-        inventoryManager = GetComponent<InventoryManager>();
     }
 
     void Update()
     {
-        // (Inventory input checks are correct)
-        if (Input.GetKeyDown(KeyCode.Alpha1)) inventoryManager.UseItem(0); 
-        if (Input.GetKeyDown(KeyCode.Alpha2)) inventoryManager.UseItem(1); 
-        if (Input.GetKeyDown(KeyCode.Alpha3)) inventoryManager.UseItem(2); 
-        
-        // Check state
-        if (playerStats.currentState != PlayerStats.PlayerState.Combat)
-            return; 
-
-        // Check for attack input
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            Punch();
-        }
     }
 
-    private void Punch()
+    public void PerformSkill(SkillData skill)
     {
-        if (playerStats.currentStamina < punchStaminaCost)
+        // 0. Check if combat state or not
+        if (playerStats.currentState != PlayerStats.PlayerState.Combat)
+            return;
+
+        // 1. Check Stamina
+        if (playerStats.currentStamina < skill.staminaCost)
         {
-            Debug.Log("Not enough stamina to punch!");
+            Debug.Log($"Not enough stamina for {skill.skillName}!");
             return;
         }
 
-        // 1. Use Stamina
-        playerStats.UseStamina(punchStaminaCost);
-
-        // 2. Get direction
+        // 2. Use Stamina
+        playerStats.UseStamina(skill.staminaCost);
         Vector2 punchDirection = playerMovement.LastFacingDirection;
 
         // 3. Trigger Animation
-        if (punchDirection.y > 0.5f) anim.SetTrigger("PunchUp");
-        else if (punchDirection.y < -0.5f) anim.SetTrigger("PunchDown");
-        else if (punchDirection.x < -0.5f) anim.SetTrigger("PunchLeft");
-        else anim.SetTrigger("PunchRight");
+        if (skill.skillType == SkillData.SkillType.Punch)
+        {
+            if (punchDirection.y > 0.5f) anim.SetTrigger("PunchUp");
+            else if (punchDirection.y < -0.5f) anim.SetTrigger("PunchDown");
+            else if (punchDirection.x < -0.5f) anim.SetTrigger("PunchLeft");
+            else anim.SetTrigger("PunchRight");
+        }
+        else if (skill.skillType == SkillData.SkillType.Kick)
+        {
+            // Implement Kick logic here
+        }
 
-        // --- CALCULATE POSITION (FOR BOTH FX AND HITBOX) ---
+        // 4. Calculate Position
         float angle = Mathf.Atan2(punchDirection.y, punchDirection.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
-
         Vector2 rotatedOffset = rotation * attackOffset;
         Vector2 spawnPosition = (Vector2)transform.position + rotatedOffset;
 
-        // --- SPAWN SLASH EFFECT ---
+        // 5. Spawn Effect
         if (slashEffectPrefab != null)
         {
             Instantiate(slashEffectPrefab, spawnPosition, rotation);
         }
 
-        // --- DETECT HITS ---
-        // We removed the old "punchPointPosition" variable
-        // We now use "spawnPosition" for the hitbox center
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(spawnPosition, punchRange, enemyLayer); // <-- FIXED LINE
-
-        // --- DEAL DAMAGE ---
+        // 6. Detect Hits
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(spawnPosition, punchRange, enemyLayer);
         foreach (Collider2D enemy in hitEnemies)
         {
             PrisonerNPC npc = enemy.GetComponent<PrisonerNPC>();
             if (npc != null)
             {
-                npc.TakeDamage(punchDamage);
+                npc.TakeDamage(skill.damage); 
             }
         }
     }
+
 
     // (OnDrawGizmosSelected function is already correct)
     private void OnDrawGizmosSelected()

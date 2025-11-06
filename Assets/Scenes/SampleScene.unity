@@ -600,15 +600,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8870bd47e54f6740b309579d2661675, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  punchStaminaCost: 10
+  punchStaminaCost: 0
   punchDamage: 5
   punchRange: 0.5
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  punchOffset: 0.5
+  attackOffset: {x: 0.5, y: 0}
   slashEffectPrefab: {fileID: 9056885727900815307, guid: c5a1a7c8a4373ac47acacd04eae306cf, type: 3}
-  effectOffset: 0.5
 --- !u!114 &175019039
 MonoBehaviour:
   m_ObjectHideFlags: 0
