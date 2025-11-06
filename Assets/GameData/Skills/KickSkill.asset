@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eee434db1f23f5d458eed33cd5d64a37, type: 3}
   m_Name: KickSkill
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: 
-  icon: {fileID: 0}
-  cooldownTime: 1
-  staminaCost: 10
-  damage: 5
+  skillName: Normal Kick
+  icon: {fileID: 5666064431742384179, guid: 84017ea1e73344f49a975bd441892b10, type: 3}
+  cooldownTime: 3
+  staminaCost: 20
+  damage: 15
   skillType: 0

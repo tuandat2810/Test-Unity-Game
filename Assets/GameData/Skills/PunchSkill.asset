@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eee434db1f23f5d458eed33cd5d64a37, type: 3}
   m_Name: PunchSkill
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: 
-  icon: {fileID: 0}
+  skillName: Normal Punch
+  icon: {fileID: 1402782722892941608, guid: 53c366ac636a80142a41a05e8e7458ef, type: 3}
   cooldownTime: 1
   staminaCost: 10
   damage: 5
