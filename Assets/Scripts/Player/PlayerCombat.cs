@@ -78,7 +78,9 @@ public class PlayerCombat : MonoBehaviour
             PrisonerNPC npc = enemy.GetComponent<PrisonerNPC>();
             if (npc != null)
             {
-                npc.TakeDamage(skill.damage); 
+                float baseDamage = skill.damage;
+                float totalDamage = playerStats.GetTotalDamage(baseDamage);
+                npc.TakeDamage(totalDamage); 
             }
         }
     }

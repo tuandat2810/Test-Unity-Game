@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector2 LastFacingDirection { get; private set; }
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -37,7 +38,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 dominantInput = new Vector2(rawX, 0);
             }
-            // 
             else
             {
                 dominantInput = new Vector2(0, rawY);

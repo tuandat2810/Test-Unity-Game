@@ -19,6 +19,15 @@ public class ItemData : ScriptableObject
     }
     public ItemType itemType;
 
+    public enum EquipmentSlot
+    {
+        None,
+        Weapon, 
+        Chest
+    }
+
+    public EquipmentSlot equipmentSlot;
+
     // --- Specific Data ---
     // We can add data here that only some items use
 
@@ -26,6 +35,10 @@ public class ItemData : ScriptableObject
     public float healAmount = 0;
     public float staminaAmount = 0;
     public float sanityAmount = 0;
+
+    [Header("Equipment Stats (Bonuses)")]
+    public int bonusHealth = 0;
+    public int bonusDamage = 0;
 
     // You can add more...
     // public float damageIncrease = 0;

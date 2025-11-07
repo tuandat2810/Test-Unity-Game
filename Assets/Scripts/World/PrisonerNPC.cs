@@ -38,7 +38,8 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     {
         Idle,       // Standing still (in Overworld)
         Chasing,    // Chasing the player (in Combat)
-        Attacking   // Attacking the player (in Combat)
+        Attacking,   // Attacking the player (in Combat)
+        Stunned     // Temporarily unable to act
     }
     private State currentState;
 
@@ -73,34 +74,69 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     // --- NPC BRAIN (UPDATE) ---
     void Update()
     {
-        // If not in combat (Idle) or the player is null, do nothing
-        if (currentState == State.Idle || player == null)
+        // If stunned (from knockback), do nothing.
+        if (currentState == State.Stunned)
         {
-            rb.linearVelocity = Vector2.zero; // Ensure NPC stands still
             return;
         }
 
-        // Calculate distance to the player
+        // If the player doesn't exist (e.g., scene change), go to Idle
+        if (player == null)
+        {
+            currentState = State.Idle;
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
+        // --- NEW STATE MACHINE LOGIC ---
+        
+        // Calculate distance ONCE
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
 
-        // Decide action based on distance
-        if (distanceToPlayer <= attackRange)
+        // Use a "switch" to manage states cleanly
+        switch (currentState)
         {
-            // 1. If close enough: Attack
-            currentState = State.Attacking;
-            AttackPlayer();
-        }
-        else if (distanceToPlayer <= detectionRange)
-        {
-            // 2. If within sight: Chase
-            currentState = State.Chasing;
-            ChasePlayer();
-        }
-        else
-        {
-            // 3. If too far: Go back to Idle (but still in combat)
-            currentState = State.Idle; // Stand still for now
-            rb.linearVelocity = Vector2.zero;
+            case State.Idle:
+                // If player comes into detection range, start chasing
+                if (distanceToPlayer <= detectionRange)
+                {
+                    currentState = State.Chasing;
+                }
+                rb.linearVelocity = Vector2.zero; // Stay still
+                break;
+                
+            case State.Chasing:
+                // If close enough, switch to Attacking
+                if (distanceToPlayer <= attackRange)
+                {
+                    currentState = State.Attacking;
+                    rb.linearVelocity = Vector2.zero; // Stop chasing immediately
+                }
+                // If player gets too far, go back to Idle
+                else if (distanceToPlayer > detectionRange)
+                {
+                    currentState = State.Idle;
+                }
+                else // Still in range, keep chasing
+                {
+                    ChasePlayer(); // This sets rb.velocity
+                }
+                break;
+                
+            case State.Attacking:
+                // We are in attack range. Stay in this state.
+                // Keep velocity at 0 (set in Chase state)
+                rb.linearVelocity = Vector2.zero;
+                
+                // Try to attack (AttackPlayer handles its own cooldown)
+                AttackPlayer(); 
+
+                // Check if we should stop attacking (player ran away)
+                if (distanceToPlayer > attackRange)
+                {
+                    currentState = State.Chasing;
+                }
+                break;
         }
     }
 

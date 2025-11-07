@@ -16,6 +16,10 @@ public class PlayerStats : MonoBehaviour
     public float currentSanity = 75f;
     public float maxSanity = 100f;
 
+    // bonus stats from equipment
+    public int bonusHealth = 0;
+    public int bonusDamage = 0; // Player combat will ask for this value
+
     // === UI REFERENCES ===
     [Header("UI Sliders")]
     public Slider healthSlider;
@@ -63,6 +67,32 @@ public class PlayerStats : MonoBehaviour
         currentState = PlayerState.Overworld;
         Debug.Log("State changed to: OVERWORLD");
     }
+
+
+    // Called by EquipmentManager when we equip/unequip
+    public void UpdateEquipmentStats(int healthBonus, int damageBonus)
+    {
+        bonusHealth = healthBonus;
+        bonusDamage = damageBonus;
+        
+        // Update the max health immediately
+        maxHealth = 100 + bonusHealth; // (Assuming 100 is base health)
+        healthSlider.maxValue = maxHealth;
+        
+        // If current health is over max, clamp it
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+            healthSlider.value = currentHealth;
+        }
+    }
+
+    // PlayerCombat will call this to calculate damage
+    public float GetTotalDamage(float baseDamage)
+    {
+        return baseDamage + bonusDamage;
+    }
+
 
     // === PUBLIC UTILITY FUNCTIONS ===
 
@@ -116,4 +146,6 @@ public class PlayerStats : MonoBehaviour
         sanitySlider.value = currentSanity;
         Debug.Log("Sanity restored: " + currentSanity);
     }
+
+    
 } 
