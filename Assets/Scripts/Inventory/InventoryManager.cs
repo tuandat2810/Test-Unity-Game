@@ -2,6 +2,7 @@ using System.Collections.Generic; // To use Lists
 using UnityEngine;
 using UnityEngine.UI; // To control UI Images
 
+[RequireComponent(typeof(EquipmentManager))]
 public class InventoryManager : MonoBehaviour
 {
     [Header("Inventory Data")]
@@ -9,14 +10,18 @@ public class InventoryManager : MonoBehaviour
     public int maxSlots = 9;
 
     [Header("UI References")]
-    public GameObject hotbarPanel; // Kéo HotbarPanel vào đây
-    public GameObject slotPrefab;  // Kéo Slot Prefab vào đây
+    public GameObject hotbarPanel; 
+    public GameObject slotPrefab;  
 
     // This list stores the actual UI slots we create
     private List<Image> hotbarSlotIcons = new List<Image>();
 
+    private EquipmentManager equipmentManager;
+
     void Start()
     {
+        equipmentManager = GetComponent<EquipmentManager>();
+
         // Initialize the list with 9 nulls
         for (int i = 0; i < maxSlots; i++)
         {
@@ -107,8 +112,18 @@ public class InventoryManager : MonoBehaviour
 
             // Remove the item after use
             hotbarItems[slotIndex] = null;
-            UpdateUI();
+        } else if (itemToUse.itemType == ItemData.ItemType.Equipment)
+        {
+            // --- NEW: EQUIP LOGIC ---
+            // Tell the EquipmentManager to equip this item
+            equipmentManager.EquipItem(itemToUse);
+            
+            // Remove the item from the hotbar after equipping
+            hotbarItems[slotIndex] = null; 
         }
-        // (Add logic for "Equipment" later)
+
+        // Update the UI after using the item
+        UpdateUI();
+        
     }
 }

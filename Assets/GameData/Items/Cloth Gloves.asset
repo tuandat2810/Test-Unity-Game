@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d65c4eefdbb1bec40b9d9a646b05047e, type: 3}
+  m_Name: Cloth Gloves
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: New Item
+  description: Item Description
+  icon: {fileID: 0}
+  itemType: 0
+  equipmentSlot: 0
+  healAmount: 0
+  staminaAmount: 0
+  sanityAmount: 0
+  bonusHealth: 0
+  bonusDamage: 0
