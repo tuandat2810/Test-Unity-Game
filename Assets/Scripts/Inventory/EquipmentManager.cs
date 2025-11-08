@@ -12,7 +12,12 @@ public class EquipmentManager : MonoBehaviour
     // We use the EquipmentSlot enum as an index
     private ItemData[] currentEquipment;
 
-    void Start()
+    public ItemData GetEquippedItem(ItemData.EquipmentSlot slot)
+    {
+        return currentEquipment[(int)slot];
+    }
+
+    void Awake()
     {
         playerStats = GetComponent<PlayerStats>();
         inventory = GetComponent<InventoryManager>();

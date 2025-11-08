@@ -1,0 +1,80 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class CharacterStatsUI : MonoBehaviour
+{
+    [Header("Data Sources (Assign Player)")]
+    public PlayerStats playerStats;
+    public EquipmentManager equipmentManager;
+
+    [Header("Stat Text Fields (Right Panel)")]
+    public TextMeshProUGUI healthValueText;
+    public TextMeshProUGUI staminaValueText;
+    public TextMeshProUGUI sanityValueText;
+    public TextMeshProUGUI damageValueText; // For total damage
+    // (Add more texts as needed, e.g., "PlayerStats_TitleText")
+
+    [Header("Equipment Slots (Left Panel)")]
+    public Image weaponSlotIcon;
+    public Image chestSlotIcon;
+    // (Add more slots as needed, e.g., "helmetSlotIcon")
+
+    // OnEnable is called automatically every time
+    // this GameObject (CharacterScreen) is set to Active.
+    void OnEnable()
+    {
+        // Fail-safe check
+        if (playerStats == null || equipmentManager == null)
+        {
+            Debug.LogError("CharacterStatsUI is missing references to Player!");
+            return;
+        }
+        
+        // Update all UI elements
+        UpdateStatsDisplay();
+        UpdateEquipmentDisplay();
+    }
+
+    public void UpdateStatsDisplay()
+    {
+        healthValueText.text = $"{playerStats.currentHealth.ToString("F0")} / {playerStats.maxHealth.ToString("F0")}";
+        staminaValueText.text = $"{playerStats.currentStamina.ToString("F0")} / {playerStats.maxStamina.ToString("F0")}";
+        sanityValueText.text = $"{playerStats.currentSanity.ToString("F0")} / {playerStats.maxSanity.ToString("F0")}";
+        
+        float baseDamage = 5f; // Base damage can be defined or fetched from PlayerStats
+        damageValueText.text = playerStats.GetTotalDamage(baseDamage).ToString("F0");
+        
+        // (Update more stats as needed)
+    }
+
+    // This function updates all the slot icons
+    public void UpdateEquipmentDisplay()
+    {
+        // Get the equipped weapon
+        ItemData weapon = equipmentManager.GetEquippedItem(ItemData.EquipmentSlot.Weapon);
+        if (weapon != null)
+        {
+            weaponSlotIcon.sprite = weapon.icon;
+            weaponSlotIcon.enabled = true; // Show the icon
+        }
+        else
+        {
+            weaponSlotIcon.enabled = false; // Hide if no weapon is equipped
+        }
+
+        // Get the equipped chest armor
+        ItemData chest = equipmentManager.GetEquippedItem(ItemData.EquipmentSlot.Chest);
+        if (chest != null)
+        {
+            chestSlotIcon.sprite = chest.icon;
+            chestSlotIcon.enabled = true;
+        }
+        else
+        {
+            chestSlotIcon.enabled = false;
+        }
+        
+        // (Repeat for Helmet, Boots, etc.)
+    }
+}
