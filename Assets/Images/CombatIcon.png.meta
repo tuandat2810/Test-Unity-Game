@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 84017ea1e73344f49a975bd441892b10
+guid: 977e01228c241394990ed9bfd58fb93c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5666064431742384179
-    second: normal_kick_0
+      213: -3896320598173250984
+    second: CombatIcon_0
+  - first:
+      213: -5362955624723329156
+    second: CombatIcon_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +40,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +54,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: normal_kick_0
+      name: CombatIcon_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
-        width: 512
-        height: 480
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +131,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 338fa70a497e1ae40800000000000000
-      internalID: 5666064431742384179
+      spriteID: 85a88de3f0d7de9c0800000000000000
+      internalID: -3896320598173250984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatIcon_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7fce220644f295b0800000000000000
+      internalID: -5362955624723329156
       vertices: []
       indices: 
       edges: []
@@ -148,7 +173,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      normal_kick_0: 5666064431742384179
+      CombatIcon_0: -3896320598173250984
+      CombatIcon_1: -5362955624723329156
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

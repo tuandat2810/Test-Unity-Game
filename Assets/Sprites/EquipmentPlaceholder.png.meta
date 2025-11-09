@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 548334dd39ec2d74f998caf580c6d503
+guid: 76f8c8012520b2d44a1823dd5fabb580
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5412910156287300836
-    second: image (1)_0
+      213: 6207328272551809574
+    second: EquipmentPlaceholder_0
+  - first:
+      213: 6565959183137210161
+    second: EquipmentPlaceholder_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +49,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,7 +116,29 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: image (1)_0
+      name: EquipmentPlaceholder_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62290b11d2cd42650800000000000000
+      internalID: 6207328272551809574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EquipmentPlaceholder_1
       rect:
         serializedVersion: 2
         x: 0
@@ -121,15 +146,15 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c1b246544ea71e4b0800000000000000
-      internalID: -5412910156287300836
+      spriteID: 13f7b90d619fe1b50800000000000000
+      internalID: 6565959183137210161
       vertices: []
       indices: 
       edges: []
@@ -138,7 +163,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 8bb7eeef68233434e92d55ed1b241a58
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +173,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      image (1)_0: -5412910156287300836
+      EquipmentPlaceholder_0: 6207328272551809574
+      EquipmentPlaceholder_1: 6565959183137210161
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

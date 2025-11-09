@@ -17,7 +17,10 @@ public class CharacterStatsUI : MonoBehaviour
 
     [Header("Equipment Slots (Left Panel)")]
     public Image weaponSlotIcon;
+    public Image weaponPlaceholder;
+
     public Image chestSlotIcon;
+    public Image chestPlaceholder;
     // (Add more slots as needed, e.g., "helmetSlotIcon")
 
     // OnEnable is called automatically every time
@@ -57,10 +60,12 @@ public class CharacterStatsUI : MonoBehaviour
         {
             weaponSlotIcon.sprite = weapon.icon;
             weaponSlotIcon.enabled = true; // Show the icon
+            weaponPlaceholder.enabled = false; // Hide placeholder
         }
         else
         {
             weaponSlotIcon.enabled = false; // Hide if no weapon is equipped
+            weaponPlaceholder.enabled = true; // Show placeholder
         }
 
         // Get the equipped chest armor
@@ -69,10 +74,12 @@ public class CharacterStatsUI : MonoBehaviour
         {
             chestSlotIcon.sprite = chest.icon;
             chestSlotIcon.enabled = true;
+            chestPlaceholder.enabled = false; // Hide placeholder
         }
         else
         {
             chestSlotIcon.enabled = false;
+            chestPlaceholder.enabled = true; // Show placeholder
         }
         
         // (Repeat for Helmet, Boots, etc.)
