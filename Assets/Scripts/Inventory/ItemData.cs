@@ -23,7 +23,10 @@ public class ItemData : ScriptableObject
     {
         None,
         Weapon, 
-        Chest
+        Chest,
+        Helmet,
+        Boots
+        // (Add more slots as needed)
     }
 
     public EquipmentSlot equipmentSlot;
@@ -39,6 +42,7 @@ public class ItemData : ScriptableObject
     [Header("Equipment Stats (Bonuses)")]
     public int bonusHealth = 0;
     public int bonusDamage = 0;
+    public int bonusDefense = 0;
 
     // You can add more...
     // public float damageIncrease = 0;

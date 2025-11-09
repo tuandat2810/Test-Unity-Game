@@ -19,8 +19,14 @@ public class CharacterStatsUI : MonoBehaviour
     public Image weaponSlotIcon;
     public Image weaponPlaceholder;
 
+    public Image helmetSlotIcon;
+    public Image helmetPlaceholder;
+
     public Image chestSlotIcon;
     public Image chestPlaceholder;
+
+    public Image bootsSlotIcon;
+    public Image bootsPlaceholder;
     // (Add more slots as needed, e.g., "helmetSlotIcon")
 
     // OnEnable is called automatically every time
@@ -81,6 +87,35 @@ public class CharacterStatsUI : MonoBehaviour
             chestSlotIcon.enabled = false;
             chestPlaceholder.enabled = true; // Show placeholder
         }
+
+        // Get the equipped helmet
+        ItemData helmet = equipmentManager.GetEquippedItem(ItemData.EquipmentSlot.Helmet);
+        if (helmet != null)
+        {
+            helmetSlotIcon.sprite = helmet.icon;
+            helmetSlotIcon.enabled = true;
+            helmetPlaceholder.enabled = false; // Hide placeholder
+        }
+        else
+        {
+            helmetSlotIcon.enabled = false;
+            helmetPlaceholder.enabled = true; // Show placeholder
+        }
+
+        // Get the equipped boots
+        ItemData boots = equipmentManager.GetEquippedItem(ItemData.EquipmentSlot.Boots);
+        if (boots != null)
+        {
+            bootsSlotIcon.sprite = boots.icon;
+            bootsSlotIcon.enabled = true;
+            bootsPlaceholder.enabled = false; // Hide placeholder
+        }
+        else
+        {
+            bootsSlotIcon.enabled = false;
+            bootsPlaceholder.enabled = true; // Show placeholder
+        }
+
         
         // (Repeat for Helmet, Boots, etc.)
     }
