@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(InventoryManager))]
+[RequireComponent(typeof(AudioSource))]
 public class PlayerCombat : MonoBehaviour
 {
     // References
@@ -11,11 +12,14 @@ public class PlayerCombat : MonoBehaviour
     private Animator anim;
     private PlayerMovement playerMovement; 
 
+    private AudioSource audioSource;
+
     [Header("Punch Attack")]
     public float punchRange = 0.5f;
     public LayerMask enemyLayer;
     public Vector2 attackOffset = new Vector2(0.5f, 0f); 
     public GameObject slashEffectPrefab;
+    public AudioClip punchSwooshSound;
 
     [Header("Knockback Settings")]
     public float knockbackForce = 5f; // Force the player deals
@@ -26,6 +30,8 @@ public class PlayerCombat : MonoBehaviour
         playerStats = GetComponent<PlayerStats>();
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
+
+        audioSource = GetComponent<AudioSource>();  
     }
 
     void Update()
@@ -52,6 +58,13 @@ public class PlayerCombat : MonoBehaviour
         // 3. Trigger Animation
         if (skill.skillType == SkillData.SkillType.Punch)
         {
+            // Sound Effect
+            if (punchSwooshSound != null)
+            {
+                audioSource.PlayOneShot(punchSwooshSound);
+            }
+
+                // Animation
             if (punchDirection.y > 0.5f) anim.SetTrigger("PunchUp");
             else if (punchDirection.y < -0.5f) anim.SetTrigger("PunchDown");
             else if (punchDirection.x < -0.5f) anim.SetTrigger("PunchLeft");

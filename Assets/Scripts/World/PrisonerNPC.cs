@@ -4,6 +4,7 @@ using System.Collections;
 // Require the NPC to have a Rigidbody2D for movement
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(AudioSource))]
 public class PrisonerNPC : MonoBehaviour, IInteractable
 {
     [Header("Info")]
@@ -31,12 +32,17 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     public float knockbackForce = 3f; // Force this NPC deals
     public float knockbackDuration = 0.1f; // Stun duration this NPC deals
 
+    private AudioSource audioSource;
+    [Header("Audio")]
+    public AudioClip hitSound;
+
     // Components
     private Rigidbody2D rb;
     private PlayerStats player; // Store the player reference
     private SpriteRenderer spriteRenderer;
     private Material originalMaterial;
     private Coroutine flashCoroutine;
+
     // === NPC STATE MACHINE ===
     private enum State
     {
@@ -58,6 +64,8 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalMaterial = spriteRenderer.material;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // This implements the IInteractable contract
@@ -182,6 +190,12 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     // --- TAKING DAMAGE & DYING ---
     public void TakeDamage(float damageAmount)
     {
+        // Play hit sound
+        if (hitSound != null)
+        {
+            audioSource.PlayOneShot(hitSound);
+        }
+
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
