@@ -3,9 +3,13 @@ using UnityEngine.UI;
 using TMPro; 
 
 [RequireComponent(typeof(PlayerCombat))]
+[RequireComponent(typeof(PlayerStats))]
+[RequireComponent(typeof(Animator))]
 public class SkillManager : MonoBehaviour
 {
     private PlayerCombat playerCombat;
+    private PlayerStats playerStats;
+    private Animator anim;
 
     [Header("Skill 1 (Punch)")]
     public SkillData skill1Data;
@@ -21,9 +25,14 @@ public class SkillManager : MonoBehaviour
     public TextMeshProUGUI skill2Text;
     private float skill2Timer = 0f;
 
+    [Header("Skill 3 (Block)")]
+    public KeyCode blockKey = KeyCode.Mouse1;
+
     void Start()
     {
         playerCombat = GetComponent<PlayerCombat>();
+        playerStats = GetComponent<PlayerStats>();
+        anim = GetComponent<Animator>();    
         
         skill1Overlay.fillAmount = 0;
         skill1Text.text = "";
@@ -45,6 +54,33 @@ public class SkillManager : MonoBehaviour
         {
             playerCombat.PerformSkill(skill2Data);
             skill2Timer = skill2Data.cooldownTime;
+        }
+
+        // Skill 3 (Block) - Hold to block
+        if (playerStats.currentState == PlayerStats.PlayerState.Combat)
+        {
+            // 1. When we PRESS the block key
+            if (Input.GetKeyDown(blockKey))
+            {
+                playerStats.SetBlocking(true);
+                anim.SetBool("isBlocking", true); // Tell animator to play block anim
+            }
+            
+            // 2. When we RELEASE the block key
+            if (Input.GetKeyUp(blockKey))
+            {
+                playerStats.SetBlocking(false);
+                anim.SetBool("isBlocking", false); // Tell animator to stop
+            }
+        }
+        else
+        {
+            // Failsafe: If we are not in combat, make sure we are not blocking
+            if (playerStats.isBlocking)
+            {
+                playerStats.SetBlocking(false);
+                anim.SetBool("isBlocking", false);
+            }
         }
 
         // Handle Cooldowns

@@ -17,9 +17,14 @@ public class PlayerStats : MonoBehaviour
     public float currentSanity = 75f;
     public float maxSanity = 100f;
 
-    // bonus stats from equipment
+    // === EQUIPMENT BONUS STATS ===
+    [Header("Equipment Bonus Stats")]
     public int bonusHealth = 0;
     public int bonusDamage = 0; // Player combat will ask for this value
+
+    [Header("Blocking Stats")]
+    public bool isBlocking = false; 
+    public float blockStaminaCost = 5; 
 
     // === UI REFERENCES ===
     [Header("UI Sliders")]
@@ -61,6 +66,12 @@ public class PlayerStats : MonoBehaviour
 
         // Start the game in Overworld state
         currentState = PlayerState.Overworld;
+    }
+
+    // SkillManager will call this
+    public void SetBlocking(bool blocking)
+    {
+        isBlocking = blocking;
     }
 
     // === STATE CHANGING FUNCTIONS (NEW) ===
@@ -108,6 +119,20 @@ public class PlayerStats : MonoBehaviour
     // --- HEALTH FUNCTIONS ---
     public void TakeDamage(float amount)
     {
+        // Check if we are blocking *before* taking any damage
+        if (isBlocking)
+        {
+            // We are blocking. Take stamina damage instead of health.
+            UseStamina(blockStaminaCost);
+            Debug.Log("Player BLOCKED attack! Stamina remaining: " + currentStamina);
+            
+            // (Optional: Play a "Block" sound effect here)
+            // (Optional: Trigger a "BlockHit" animation/effect)
+            
+            return; // Stop the function here. No health damage, no knockback.
+        }
+
+        // Not blocking, take health damage
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         healthSlider.value = currentHealth;
@@ -158,6 +183,11 @@ public class PlayerStats : MonoBehaviour
 
     public void ApplyKnockback(Vector2 direction, float force, float duration)
     {
+        if (isBlocking)
+        {
+            return; // Do not apply knockback if we are blocking
+        }
+
         // If a knockback is already happening, stop it
         if (knockbackCoroutine != null)
         {
