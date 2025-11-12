@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI; // To use UI elements like Sliders
+using System.Collections;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -24,8 +25,7 @@ public class PlayerStats : MonoBehaviour
     [Header("UI Sliders")]
     public Slider healthSlider;
     public Slider staminaSlider;
-    public Slider sanitySlider;
-
+    public Slider sanitySlider; 
 
     // === PLAYER STATE ===
     // This script now owns the player's state
@@ -35,6 +35,11 @@ public class PlayerStats : MonoBehaviour
         Combat      // fighting status
     }
     public PlayerState currentState;
+
+    // KNOCKBACK VARIABLES
+    private Rigidbody2D rb;
+    private PlayerMovement playerMovement;
+    private Coroutine knockbackCoroutine;
 
 
     // === START FUNCTION ===
@@ -49,6 +54,10 @@ public class PlayerStats : MonoBehaviour
         healthSlider.value = currentHealth;
         staminaSlider.value = currentStamina;
         sanitySlider.value = currentSanity;
+
+
+        rb = GetComponent<Rigidbody2D>();
+        playerMovement = GetComponent<PlayerMovement>();
 
         // Start the game in Overworld state
         currentState = PlayerState.Overworld;
@@ -147,5 +156,37 @@ public class PlayerStats : MonoBehaviour
         Debug.Log("Sanity restored: " + currentSanity);
     }
 
-    
+    public void ApplyKnockback(Vector2 direction, float force, float duration)
+    {
+        // If a knockback is already happening, stop it
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
+        // Start a new knockback coroutine
+        knockbackCoroutine = StartCoroutine(KnockbackCoroutine(direction, force, duration));
+    }   
+
+    private IEnumerator KnockbackCoroutine(Vector2 direction, float force, float duration)
+    {
+        // 1. Disable player's movement script (stun)
+        if (playerMovement != null)
+        {
+            playerMovement.enabled = false;
+        }   
+
+        // 2. Apply knockback force
+        rb.linearVelocity = Vector2.zero; // Reset current velocity
+        rb.AddForce(direction * force, ForceMode2D.Impulse);
+
+        // 3. Wait for the duration
+        yield return new WaitForSeconds(duration);
+
+        // 4. Re-enable player's movement script
+        // We DELETE "rb.velocity = Vector2.zero;" to prevent getting stuck
+        if (playerMovement != null)
+            playerMovement.enabled = true;
+        
+        knockbackCoroutine = null;
+    }
 } 

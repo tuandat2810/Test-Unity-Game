@@ -27,6 +27,10 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
 
     private float lastAttackTime = 0f;
 
+    [Header("Knockback Settings")]
+    public float knockbackForce = 3f; // Force this NPC deals
+    public float knockbackDuration = 0.1f; // Stun duration this NPC deals
+
     // Components
     private Rigidbody2D rb;
     private PlayerStats player; // Store the player reference
@@ -39,9 +43,11 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         Idle,       // Standing still (in Overworld)
         Chasing,    // Chasing the player (in Combat)
         Attacking,   // Attacking the player (in Combat)
-        Stunned     // Temporarily unable to act
+        Stunned     // Temporarily unable to act    
     }
     private State currentState;
+    private Coroutine knockbackCoroutine;   
+
 
     // --- SETUP & INTERACTION ---
     void Start()
@@ -77,6 +83,7 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         // If stunned (from knockback), do nothing.
         if (currentState == State.Stunned)
         {
+            rb.linearVelocity = Vector2.zero; // Make sure we are stopped
             return;
         }
 
@@ -163,6 +170,10 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
             // Deal damage to the player
             player.TakeDamage(attackDamage);
 
+            // Apply knockback to the player
+            Vector2 knockbackDirection = (player.transform.position - transform.position).normalized;
+            player.ApplyKnockback(knockbackDirection, knockbackForce, knockbackDuration);   
+
             Debug.Log($"{npcName} attacked Player! Player health: {player.currentHealth}");
             // (Optional: Play NPC attack animation here)
         }
@@ -235,5 +246,37 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
 
         // You could also play a death animation here
         // Destroy(gameObject, 2f); // Or destroy it after 2 seconds
+    }
+
+    // This function will be called by PlayerCombat
+    public void ApplyKnockback(Vector2 direction, float force, float duration)
+    {
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
+        knockbackCoroutine = StartCoroutine(KnockbackRoutine(direction, force, duration));
+    }
+
+    private IEnumerator KnockbackRoutine(Vector2 direction, float force, float duration)
+    {
+        // 1. Enter Stunned state
+        currentState = State.Stunned;
+        
+        // 2. Apply the knockback force
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(direction * force, ForceMode2D.Impulse);
+
+        // 3. Wait for the stun duration
+        yield return new WaitForSeconds(duration);
+
+        // 4. Reset velocity and return to chasing
+        rb.linearVelocity = Vector2.zero;
+        if (currentHealth > 0) // Don't chase if dead
+        {
+            currentState = State.Chasing;
+        }
+        
+        knockbackCoroutine = null;
     }
 }

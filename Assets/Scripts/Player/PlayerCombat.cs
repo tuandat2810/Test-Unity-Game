@@ -17,6 +17,9 @@ public class PlayerCombat : MonoBehaviour
     public Vector2 attackOffset = new Vector2(0.5f, 0f); 
     public GameObject slashEffectPrefab;
 
+    [Header("Knockback Settings")]
+    public float knockbackForce = 5f; // Force the player deals
+    public float knockbackDuration = 0.15f; // Stun duration the player deals
 
     void Start()
     {
@@ -77,10 +80,15 @@ public class PlayerCombat : MonoBehaviour
         {
             PrisonerNPC npc = enemy.GetComponent<PrisonerNPC>();
             if (npc != null)
-            {
+            {   
+                // 1. Calculate Damage
                 float baseDamage = skill.damage;
                 float totalDamage = playerStats.GetTotalDamage(baseDamage);
-                npc.TakeDamage(totalDamage); 
+                npc.TakeDamage(totalDamage);    
+
+                // 2. Apply Knockback to Enemy
+                Vector2 knockbackDirection = (npc.transform.position - transform.position).normalized;
+                npc.ApplyKnockback(knockbackDirection, knockbackForce, knockbackDuration);
             }
         }
     }
