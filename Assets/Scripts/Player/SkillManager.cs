@@ -4,12 +4,16 @@ using TMPro;
 
 [RequireComponent(typeof(PlayerCombat))]
 [RequireComponent(typeof(PlayerStats))]
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Animator))]    
+[RequireComponent(typeof(PlayerMovement))] 
+[RequireComponent(typeof(SpriteRenderer))]
 public class SkillManager : MonoBehaviour
 {
     private PlayerCombat playerCombat;
     private PlayerStats playerStats;
     private Animator anim;
+    private PlayerMovement playerMovement;
+    private SpriteRenderer spriteRenderer;
 
     [Header("Skill 1 (Punch)")]
     public SkillData skill1Data;
@@ -33,6 +37,8 @@ public class SkillManager : MonoBehaviour
         playerCombat = GetComponent<PlayerCombat>();
         playerStats = GetComponent<PlayerStats>();
         anim = GetComponent<Animator>();    
+        playerMovement = GetComponent<PlayerMovement>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         
         skill1Overlay.fillAmount = 0;
         skill1Text.text = "";
@@ -41,6 +47,13 @@ public class SkillManager : MonoBehaviour
     }
 
     void Update()
+    {
+        HandleSkillInputs(); // Handle J and K keys
+        HandleBlockInput();  // Handle Right Mouse Button
+        HandleCooldowns();   // Update the UI
+    }
+
+    private void HandleSkillInputs()
     {
         // Skill 1 (J)
         if (Input.GetKeyDown(skill1Key) && skill1Timer <= 0)
@@ -55,22 +68,33 @@ public class SkillManager : MonoBehaviour
             playerCombat.PerformSkill(skill2Data);
             skill2Timer = skill2Data.cooldownTime;
         }
+    }
 
-        // Skill 3 (Block) - Hold to block
+    private void HandleBlockInput()
+    {
+        // Logic for holding the block key
         if (playerStats.currentState == PlayerStats.PlayerState.Combat)
         {
             // 1. When we PRESS the block key
             if (Input.GetKeyDown(blockKey))
             {
                 playerStats.SetBlocking(true);
-                anim.SetBool("isBlocking", true); // Tell animator to play block anim
+                anim.SetBool("isBlocking", true);
+
+                // Set flip direction
+                Vector2 direction = playerMovement.LastFacingDirection;
+                if (direction.x < -0.1f)
+                    spriteRenderer.flipX = true; // Facing Left
+                else if (direction.x > 0.1f)
+                    spriteRenderer.flipX = false; // Facing Right
             }
             
             // 2. When we RELEASE the block key
             if (Input.GetKeyUp(blockKey))
             {
                 playerStats.SetBlocking(false);
-                anim.SetBool("isBlocking", false); // Tell animator to stop
+                anim.SetBool("isBlocking", false);
+                spriteRenderer.flipX = false; // Reset flip
             }
         }
         else
@@ -80,11 +104,9 @@ public class SkillManager : MonoBehaviour
             {
                 playerStats.SetBlocking(false);
                 anim.SetBool("isBlocking", false);
+                spriteRenderer.flipX = false;
             }
         }
-
-        // Handle Cooldowns
-        HandleCooldowns();
     }
 
     private void HandleCooldowns()

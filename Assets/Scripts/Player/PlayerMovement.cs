@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerStats))]
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f; // player speed
@@ -8,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 dominantInput;
 
     private Animator anim;
+    private PlayerStats playerStats;
 
     public Vector2 LastFacingDirection { get; private set; }
 
@@ -16,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        playerStats = GetComponent<PlayerStats>();  
 
         rb.gravityScale = 0; // turnoff gravity
 
@@ -25,6 +30,15 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // If we are blocking, stop all movement input
+        if (playerStats.isBlocking)
+        {
+            moveInput = Vector2.zero;
+            anim.SetFloat("Speed", 0); // Stop run animation
+            return; // Skip the rest of the Update
+        }
+
+        // --- MOVEMENT INPUT ---
         float rawX = Input.GetAxisRaw("Horizontal");
         float rawY = Input.GetAxisRaw("Vertical");
 
