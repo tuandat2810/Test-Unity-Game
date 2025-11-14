@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e8252cfe3be30e4a9ce89539516dc2e, type: 3}
   m_Name: OldPrisoner_CombatStart
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  speakerName: 
-  dialogueLine: 
+  speakerName: Old Prisoner
+  dialogueLine: Haha, a fool with ambition! Fine, show me what you've got!
   playerResponses: []
