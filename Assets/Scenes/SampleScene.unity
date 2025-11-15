@@ -9736,6 +9736,8 @@ MonoBehaviour:
   dialogueLineText: {fileID: 979638072}
   choicePanel: {fileID: 203727137}
   choiceButtonPrefab: {fileID: 6587259611624337186, guid: 5c7ce859fda82c548928d1e6427fd934, type: 3}
+  hotbarPanel: {fileID: 0}
+  skillPanel: {fileID: 0}
 --- !u!1 &2026558722
 GameObject:
   m_ObjectHideFlags: 0

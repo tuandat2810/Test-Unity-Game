@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8252cfe3be30e4a9ce89539516dc2e, type: 3}
+  m_Name: OldPrisoner_NodeB
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
+  speakerName: Michael
+  dialogueLine: "What\u2019s wrong with ambition? I\u2019m not planning to rot in
+    here."
+  linearNextNode: {fileID: 11400000, guid: 67bf9b895354871429ff107888a96ed9, type: 2}
+  playerResponses: []

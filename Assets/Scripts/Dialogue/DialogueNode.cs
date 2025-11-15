@@ -10,6 +10,9 @@ public class DialogueNode : ScriptableObject
     [TextArea(3, 8)]
     public string dialogueLine; // The line the NPC says.
 
+    [Header("Linear (Click-to-Continue)")]
+    public DialogueNode linearNextNode; // Node to go to if options list is empty
+
     // List of possible player responses to this dialogue line.
     // If this list is empty, it's a linear "click-to-continue" line.
     public List<PlayerResponse> playerResponses = new List<PlayerResponse>();

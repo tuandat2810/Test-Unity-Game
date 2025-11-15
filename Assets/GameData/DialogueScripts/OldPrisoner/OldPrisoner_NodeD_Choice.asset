@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8252cfe3be30e4a9ce89539516dc2e, type: 3}
+  m_Name: OldPrisoner_NodeD_Choice
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
+  speakerName: Old Prisoner
+  dialogueLine: "In here, kid, you need friends\u2026 or at least tools. You help
+    me out, and I\u2019ll \u2018show\u2019 you a thing or two."
+  linearNextNode: {fileID: 0}
+  playerResponses:
+  - responseText: What do you need?
+    nextNode: {fileID: 11400000, guid: fe6569507c20fbc4d964631fb3067fdd, type: 2}
+  - responseText: I can handle myself. (Lose 1 Sanity)
+    nextNode: {fileID: 11400000, guid: 87bf0318cfb15ab4392b13a7616ac7ef, type: 2}
+  - responseText: "[Leave] I don\u2019t have time."
+    nextNode: {fileID: 11400000, guid: c178d7517de34834da24f17f440c99cf, type: 2}

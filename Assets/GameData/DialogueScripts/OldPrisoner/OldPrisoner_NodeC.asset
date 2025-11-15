@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8252cfe3be30e4a9ce89539516dc2e, type: 3}
+  m_Name: OldPrisoner_NodeC
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
+  speakerName: Old Prisoner
+  dialogueLine: "Hah! \u2018Ambition\u2019 will get you killed in here. I\u2019ve
+    seen dozens like you come and go."
+  linearNextNode: {fileID: 11400000, guid: fca86967e9a84b140b66e2fa3f78668a, type: 2}
+  playerResponses: []
