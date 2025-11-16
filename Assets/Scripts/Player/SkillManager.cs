@@ -31,6 +31,7 @@ public class SkillManager : MonoBehaviour
 
     [Header("Skill 3 (Block)")]
     public KeyCode blockKey = KeyCode.Mouse1;
+    public GameObject blockHighlight;
 
     void Start()
     {
@@ -44,6 +45,10 @@ public class SkillManager : MonoBehaviour
         skill1Text.text = "";
         skill2Overlay.fillAmount = 0;
         skill2Text.text = "";
+
+        // Ensure highlight is off at the start
+        if (blockHighlight != null)
+            blockHighlight.SetActive(false);
     }
 
     void Update()
@@ -81,6 +86,9 @@ public class SkillManager : MonoBehaviour
                 playerStats.SetBlocking(true);
                 anim.SetBool("isBlocking", true);
 
+                if (blockHighlight != null)
+                    blockHighlight.SetActive(true); 
+
                 // Set flip direction
                 Vector2 direction = playerMovement.LastFacingDirection;
                 if (direction.x < -0.1f)
@@ -95,6 +103,9 @@ public class SkillManager : MonoBehaviour
                 playerStats.SetBlocking(false);
                 anim.SetBool("isBlocking", false);
                 spriteRenderer.flipX = false; // Reset flip
+
+                if (blockHighlight != null)
+                    blockHighlight.SetActive(false);
             }
         }
         else
@@ -106,6 +117,9 @@ public class SkillManager : MonoBehaviour
                 anim.SetBool("isBlocking", false);
                 spriteRenderer.flipX = false;
             }
+
+            if (blockHighlight != null)
+                    blockHighlight.SetActive(false);
         }
     }
 

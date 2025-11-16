@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 977e01228c241394990ed9bfd58fb93c
+guid: c6ecc3dcf6031974d8d2d4addf1893b6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3896320598173250984
-    second: CombatIcon_0
+      213: 895115602259724457
+    second: CombatIcon (1)_0
   - first:
-      213: -5362955624723329156
-    second: CombatIcon_1
+      213: -7838732246719477534
+    second: CombatIcon (1)_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -124,15 +124,15 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 85a88de3f0d7de9c0800000000000000
-      internalID: -3896320598173250984
+      spriteID: acddfce701fb9814da11f7d96f118a33
+      internalID: -516429907
       vertices: []
       indices: 
       edges: []
@@ -141,20 +141,42 @@ TextureImporter:
       name: CombatIcon_1
       rect:
         serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e129c00aa94ab447a0911b8842f20ec
+      internalID: -178633403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CombatIcon_2
+      rect:
+        serializedVersion: 2
         x: 0
         y: 0
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c7fce220644f295b0800000000000000
-      internalID: -5362955624723329156
+      spriteID: dd9fac022b7928147b467d1eb27ed841
+      internalID: 1642337651
       vertices: []
       indices: 
       edges: []
@@ -163,7 +185,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e23f6707bfef3b444bf82e929ca331e8
     internalID: 0
     vertices: []
     indices: 
@@ -171,10 +193,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      CombatIcon_0: -3896320598173250984
-      CombatIcon_1: -5362955624723329156
+      CombatIcon_0: -516429907
+      CombatIcon_1: -178633403
+      CombatIcon_2: 1642337651
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
