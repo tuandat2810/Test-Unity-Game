@@ -6039,6 +6039,9 @@ MonoBehaviour:
   attackRange: 1.2
   attackCooldown: 1.5
   detectionRange: 5
+  attackWindupTime: 0.2
+  slashEffectPrefab: {fileID: 9056885727900815307, guid: c5a1a7c8a4373ac47acacd04eae306cf, type: 3}
+  warningColor: {r: 1, g: 0, b: 0, a: 1}
   knockbackForce: 3
   knockbackDuration: 0.1
   hitSound: {fileID: 8300000, guid: 6d424e9b1bce5e544958d59f863c5998, type: 3}
