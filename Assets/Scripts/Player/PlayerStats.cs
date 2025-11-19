@@ -117,7 +117,7 @@ public class PlayerStats : MonoBehaviour
     // === PUBLIC UTILITY FUNCTIONS ===
 
     // --- HEALTH FUNCTIONS ---
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, Transform attacker = null)
     {
         // Check if we are blocking *before* taking any damage
         if (isBlocking)

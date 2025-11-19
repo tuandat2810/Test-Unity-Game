@@ -11,8 +11,8 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     [SerializeField] private string npcName = "Rival Prisoner";
 
     [Header("Effects")]
-    public GameObject damageTextPrefab; 
-    public Vector3 textSpawnOffset = new Vector3(0, 1f, 0); 
+    public GameObject damageTextPrefab;
+    public Vector3 textSpawnOffset = new Vector3(0, 1f, 0);
     public Material flashMaterial;
     public float flashDuration = 0.1f;
     // ---
@@ -27,6 +27,11 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     public float detectionRange = 5f; // "Sight" range to start chasing
 
     private float lastAttackTime = 0f;
+
+    [Header("Attack Settings")]
+    public float attackWindupTime = 0.2f; // Time before attack hits
+    public GameObject slashEffectPrefab; // Visual effect for attack
+    public Color warningColor = Color.red;
 
     [Header("Knockback Settings")]
     public float knockbackForce = 3f; // Force this NPC deals
@@ -52,7 +57,7 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         Stunned     // Temporarily unable to act    
     }
     private State currentState;
-    private Coroutine knockbackCoroutine;   
+    private Coroutine knockbackCoroutine;
 
 
     // --- SETUP & INTERACTION ---
@@ -104,7 +109,7 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         }
 
         // --- NEW STATE MACHINE LOGIC ---
-        
+
         // Calculate distance ONCE
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
 
@@ -119,13 +124,13 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
                 }
                 rb.linearVelocity = Vector2.zero; // Stay still
                 break;
-                
+
             case State.Chasing:
                 // If close enough, switch to Attacking
                 if (distanceToPlayer <= attackRange)
                 {
-                    currentState = State.Attacking;
-                    rb.linearVelocity = Vector2.zero; // Stop chasing immediately
+                    AttackPlayer(); 
+                    rb.linearVelocity = Vector2.zero;
                 }
                 // If player gets too far, go back to Idle
                 else if (distanceToPlayer > detectionRange)
@@ -137,14 +142,14 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
                     ChasePlayer(); // This sets rb.velocity
                 }
                 break;
-                
+
             case State.Attacking:
                 // We are in attack range. Stay in this state.
                 // Keep velocity at 0 (set in Chase state)
                 rb.linearVelocity = Vector2.zero;
-                
+
                 // Try to attack (AttackPlayer handles its own cooldown)
-                AttackPlayer(); 
+                AttackPlayer();
 
                 // Check if we should stop attacking (player ran away)
                 if (distanceToPlayer > attackRange)
@@ -169,21 +174,68 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     {
         rb.linearVelocity = Vector2.zero; // Stop moving to attack
 
-        // Check attack cooldown
-        if (Time.time >= lastAttackTime + attackCooldown)
+        // Only attack if cooldown is over and not in combat state
+        if (Time.time >= lastAttackTime + attackCooldown && currentState != State.Attacking)
         {
-            // Ready to attack again
-            lastAttackTime = Time.time;
+            StartCoroutine(AttackRoutine());
+        }
+    }
 
-            // Deal damage to the player
-            player.TakeDamage(attackDamage);
+    public IEnumerator AttackRoutine()
+    {
+        // 1. Start phase - switch to Attacking state
+        currentState = State.Attacking;
+        lastAttackTime = Time.time;
+        Color originalColor = GetComponent<SpriteRenderer>().color;
 
-            // Apply knockback to the player
-            Vector2 knockbackDirection = (player.transform.position - transform.position).normalized;
-            player.ApplyKnockback(knockbackDirection, knockbackForce, knockbackDuration);   
+        // 2. Wind-up phase - change color to indicate attack is coming
+        GetComponent<SpriteRenderer>().color = warningColor;
+        // (Optional: Show "!" overhead or play sound)
 
-            Debug.Log($"{npcName} attacked Player! Player health: {player.currentHealth}");
-            // (Optional: Play NPC attack animation here)
+        yield return new WaitForSeconds(attackWindupTime);
+
+        // 3. Attack phase - deal damage and show effect
+        GetComponent<SpriteRenderer>().color = originalColor;
+
+        // check if player is still in range
+        if (player != null)
+        {
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+            // Allows to hit a little further than attackRange to be fair
+            if (distance <= attackRange + 0.2f)
+            {
+                player.TakeDamage(attackDamage, transform);
+
+                // Show slash effect
+                if (slashEffectPrefab != null)
+                {
+                    Vector3 hitPos = (player.transform.position + transform.position) / 2; // Midpoint
+                    Instantiate(slashEffectPrefab, hitPos, Quaternion.identity);
+                }
+
+                // Play hit sound
+                if (audioSource != null && hitSound != null) audioSource.PlayOneShot(hitSound);
+
+                // Log attack
+                Debug.Log($"{npcName} attacked Player!");
+            }
+        }
+        else
+        {
+            Debug.Log($"{npcName} missed! Player moved away.");
+        }
+
+        // 4. Recovery phase
+        yield return new WaitForSeconds(0.2f); // Small recovery time
+
+        // 5. Return to Chasing state
+        if (player != null && Vector2.Distance(transform.position, player.transform.position) <= detectionRange)
+        {
+            currentState = State.Chasing;
+        }
+        else
+        {
+            currentState = State.Idle;
         }
     }
 
@@ -276,7 +328,7 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
     {
         // 1. Enter Stunned state
         currentState = State.Stunned;
-        
+
         // 2. Apply the knockback force
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction * force, ForceMode2D.Impulse);
@@ -290,7 +342,7 @@ public class PrisonerNPC : MonoBehaviour, IInteractable
         {
             currentState = State.Chasing;
         }
-        
+
         knockbackCoroutine = null;
     }
 }
