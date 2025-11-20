@@ -3,11 +3,11 @@ using UnityEngine;
 // This component will automatically destroy the GameObject it is on
 // after the Particle System finishes playing.
 [RequireComponent(typeof(ParticleSystem))]
-public class AutoDestroyParticle : MonoBehaviour 
+public class AutoDestroyParticle : MonoBehaviour
 {
     private ParticleSystem ps;
 
-    void Start() 
+    void Start()
     {
         ps = GetComponent<ParticleSystem>();
     }

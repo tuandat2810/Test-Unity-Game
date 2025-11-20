@@ -21,12 +21,12 @@ public class EquipmentManager : MonoBehaviour
     {
         playerStats = GetComponent<PlayerStats>();
         inventory = GetComponent<InventoryManager>();
-        
+
         // Initialize the array
         int numSlots = System.Enum.GetNames(typeof(ItemData.EquipmentSlot)).Length;
         currentEquipment = new ItemData[numSlots];
     }
-    
+
     // This is the main function
     public void EquipItem(ItemData itemToEquip)
     {
@@ -42,10 +42,10 @@ public class EquipmentManager : MonoBehaviour
 
         // Put the new item in the slot
         currentEquipment[slotIndex] = itemToEquip;
-        
+
         // Remove the new item from the hotbar (optional, but recommended)
-        // inventory.RemoveItem(itemToEquip); 
-        
+        // inventory.RemoveItem(itemToEquip);
+
         RecalculateStats();
     }
 
@@ -80,7 +80,7 @@ public class EquipmentManager : MonoBehaviour
                 totalDamageBonus += item.bonusDamage;
             }
         }
-        
+
         // Send the final totals to PlayerStats
         playerStats.UpdateEquipmentStats(totalHealthBonus, totalDamageBonus);
     }

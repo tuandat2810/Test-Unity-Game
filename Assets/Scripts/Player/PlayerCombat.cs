@@ -10,14 +10,14 @@ public class PlayerCombat : MonoBehaviour
     // References
     private PlayerStats playerStats;
     private Animator anim;
-    private PlayerMovement playerMovement; 
+    private PlayerMovement playerMovement;
 
     private AudioSource audioSource;
 
     [Header("Punch Attack")]
     public float punchRange = 0.5f;
     public LayerMask enemyLayer;
-    public Vector2 attackOffset = new Vector2(0.5f, 0f); 
+    public Vector2 attackOffset = new Vector2(0.5f, 0f);
     public GameObject slashEffectPrefab;
     public AudioClip punchSwooshSound;
 
@@ -31,12 +31,13 @@ public class PlayerCombat : MonoBehaviour
         anim = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
 
-        audioSource = GetComponent<AudioSource>();  
+        audioSource = GetComponent<AudioSource>();
     }
 
-    void Update()
-    {
+    void Update(){
+
     }
+
 
     public void PerformSkill(SkillData skill)
     {
@@ -93,11 +94,17 @@ public class PlayerCombat : MonoBehaviour
         {
             PrisonerNPC npc = enemy.GetComponent<PrisonerNPC>();
             if (npc != null)
-            {   
+            {
                 // 1. Calculate Damage
                 float baseDamage = skill.damage;
                 float totalDamage = playerStats.GetTotalDamage(baseDamage);
-                npc.TakeDamage(totalDamage);    
+                npc.TakeDamage(totalDamage);
+
+                // Camera Shake
+                if (CameraShake.Instance != null)
+                {
+                    CameraShake.Instance.Shake(0.1f, 0.1f);
+                }
 
                 // 2. Apply Knockback to Enemy
                 Vector2 knockbackDirection = (npc.transform.position - transform.position).normalized;
@@ -119,7 +126,7 @@ public class PlayerCombat : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
         Vector2 rotatedOffset = rotation * attackOffset;
         Vector2 punchPointPosition = (Vector2)transform.position + rotatedOffset;
-        
+
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(punchPointPosition, punchRange);
     }
