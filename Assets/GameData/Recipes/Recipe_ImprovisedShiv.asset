@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1338521acb47c14384511b80d716b92, type: 3}
+  m_Name: Recipe_ImprovisedShiv
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingRecipe
+  recipeName: Making Sharp Knife
+  icon: {fileID: 9131788101145217367, guid: 4fce5a3c37dbb3f4fb40ebb8e53b928b, type: 3}
+  requiredItems:
+  - {fileID: 11400000, guid: 993b04ea91b539e42977f67c05302821, type: 2}
+  - {fileID: 11400000, guid: 0aa31fc4d73b93441a34f68f6641a6e5, type: 2}
+  outputItem: {fileID: 11400000, guid: 1bca5f65a90350d43bc94fe41f328c45, type: 2}
+  outputAmount: 1
