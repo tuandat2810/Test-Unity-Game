@@ -69,7 +69,7 @@ public class CraftingUI : MonoBehaviour
             recipeNameText.text = recipe.recipeName;
 
         // List ingredients
-        string list = "Nguyên liệu:\n";
+        string list = "Ingredients:\n";
         foreach (ItemData item in recipe.requiredItems)
         {
             list += $"- {item.itemName}\n";
