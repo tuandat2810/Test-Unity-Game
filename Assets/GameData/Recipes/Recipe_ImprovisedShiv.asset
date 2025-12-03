@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CraftingRecipe
   recipeName: Making Sharp Knife
   icon: {fileID: 9131788101145217367, guid: 4fce5a3c37dbb3f4fb40ebb8e53b928b, type: 3}
-  requiredItems:
-  - {fileID: 11400000, guid: 993b04ea91b539e42977f67c05302821, type: 2}
-  - {fileID: 11400000, guid: 0aa31fc4d73b93441a34f68f6641a6e5, type: 2}
+  ingredients:
+  - item: {fileID: 11400000, guid: 993b04ea91b539e42977f67c05302821, type: 2}
+    count: 1
+  - item: {fileID: 11400000, guid: 0aa31fc4d73b93441a34f68f6641a6e5, type: 2}
+    count: 1
   outputItem: {fileID: 11400000, guid: 1bca5f65a90350d43bc94fe41f328c45, type: 2}
   outputAmount: 1

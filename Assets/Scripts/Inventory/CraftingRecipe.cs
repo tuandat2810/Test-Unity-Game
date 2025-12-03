@@ -6,12 +6,20 @@ public class CraftingRecipe : ScriptableObject
 {
     [Header("Recipe Info")]
     public string recipeName;
-    public Sprite icon; // Icon for the recipe UI
+    public Sprite icon;
+
+
+    [System.Serializable] 
+    public struct Ingredient 
+    {
+        public ItemData item;
+        public int count;
+    }
 
     [Header("Ingredients")]
-    public List<ItemData> requiredItems; // List of items needed (e.g. Brush, Stone)
+    public List<Ingredient> ingredients; 
 
     [Header("Result")]
-    public ItemData outputItem; // The item you get (e.g. Shiv)
-    public int outputAmount = 1; // How many you get
+    public ItemData outputItem;
+    public int outputAmount = 1;
 }

@@ -18,23 +18,23 @@ public class CraftingManager : MonoBehaviour
         // (We don't want to count the same item twice if we need 2 of them)
         List<ItemData> tempInventory = new List<ItemData>(inventory.hotbarItems);
 
-        foreach (ItemData requiredItem in recipe.requiredItems)
+        foreach (CraftingRecipe.Ingredient ing in recipe.ingredients)
         {
-            bool found = false;
+            int amountNeeded = ing.count;
             
-            // Search for the ingredient
             for (int i = 0; i < tempInventory.Count; i++)
             {
-                if (tempInventory[i] == requiredItem)
+                if (tempInventory[i] == ing.item)
                 {
                     tempInventory[i] = null; // Mark this slot as "used" locally
-                    found = true;
-                    break; // Found one, move to next required item
+                    amountNeeded--;
+                    
+                    if (amountNeeded <= 0) break; // Got enough of this ingredient
                 }
             }
 
-            // If we couldn't find this ingredient, we can't craft
-            if (!found) return false;
+            // If after checking all slots we still need more, we can't craft
+            if (amountNeeded > 0) return false;
         }
 
         // Also check if we have space for the output item
@@ -54,14 +54,18 @@ public class CraftingManager : MonoBehaviour
         }
 
         // 1. Remove ingredients
-        foreach (ItemData requiredItem in recipe.requiredItems)
+        foreach (CraftingRecipe.Ingredient ing in recipe.ingredients)
         {
+            int amountToRemove = ing.count;
+
             for (int i = 0; i < inventory.maxSlots; i++)
             {
-                if (inventory.hotbarItems[i] == requiredItem)
+                if (inventory.hotbarItems[i] == ing.item)
                 {
                     inventory.hotbarItems[i] = null; // Remove item
-                    break; // Only remove ONE instance per required item
+                    amountToRemove--;
+
+                    if (amountToRemove <= 0) break; // Removed enough, move to next ingredient
                 }
             }
         }

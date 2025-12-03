@@ -70,9 +70,9 @@ public class CraftingUI : MonoBehaviour
 
         // List ingredients
         string list = "Ingredients:\n";
-        foreach (ItemData item in recipe.requiredItems)
+        foreach (CraftingRecipe.Ingredient ing in recipe.ingredients)
         {
-            list += $"- {item.itemName}\n";
+            list += $"- {ing.count}x {ing.item.itemName}\n";
         }
         
         if (ingredientsText != null)
