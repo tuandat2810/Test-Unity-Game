@@ -10,6 +10,9 @@ public class InventoryInput : MonoBehaviour
     public CraftingRecipe testRecipe;
     public CraftingManager craftingManager;
 
+    [Header("UI References")]
+    public GameObject craftingScreen;
+
     void Start()
     {
         // Get the InventoryManager component on this same GameObject
@@ -62,10 +65,14 @@ public class InventoryInput : MonoBehaviour
         }
 
 
-        // Testing crafting with C key
+        // Toggle crafting screen
         if (Input.GetKeyDown(KeyCode.C))
         {
-            craftingManager.Craft(testRecipe);
+            bool isActive = craftingScreen.activeSelf;
+            craftingScreen.SetActive(!isActive);
+
+            // (Optional) Pause the game when crafting screen is active
+            Time.timeScale = !isActive ? 0f : 1f;
         }
     }
 }

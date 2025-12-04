@@ -1172,7 +1172,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -1542,6 +1542,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryInput
   testRecipe: {fileID: 11400000, guid: c49a142169f378f449801269ed893060, type: 2}
   craftingManager: {fileID: 0}
+  craftingScreen: {fileID: 1988044451}
 --- !u!114 &175019042
 MonoBehaviour:
   m_ObjectHideFlags: 0
