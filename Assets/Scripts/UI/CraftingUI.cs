@@ -15,7 +15,8 @@ public class CraftingUI : MonoBehaviour
     [Header("Details Panel")]
     public Image resultIcon;
     public TextMeshProUGUI recipeNameText;
-    public TextMeshProUGUI ingredientsText;
+    public Transform ingredientsGrid;
+    public GameObject ingredientSlotPrefab;
     public Button craftButton;
 
     private CraftingRecipe selectedRecipe;
@@ -24,13 +25,13 @@ public class CraftingUI : MonoBehaviour
     void Start()
     {
         craftingManager = FindObjectOfType<CraftingManager>();
-        
+
         // Hide screen on start
         gameObject.SetActive(false);
 
         // Generate the list
         PopulateRecipeList();
-        
+
         // Assign Craft Button
         if (craftButton != null)
             craftButton.onClick.AddListener(OnCraftButtonDown);
@@ -64,19 +65,26 @@ public class CraftingUI : MonoBehaviour
             resultIcon.sprite = recipe.outputItem.icon;
             resultIcon.enabled = true;
         }
-        
-        if (recipeNameText != null) 
+
+        if (recipeNameText != null)
             recipeNameText.text = recipe.recipeName;
 
         // List ingredients
-        string list = "Ingredients:\n";
+        foreach (Transform child in ingredientsGrid)
+        {
+            Destroy(child.gameObject);
+        }
+
         foreach (CraftingRecipe.Ingredient ing in recipe.ingredients)
         {
-            list += $"- {ing.count}x {ing.item.itemName}\n";
+            GameObject slotGO = Instantiate(ingredientSlotPrefab, ingredientsGrid);
+
+            IngredientSlotUI slotScript = slotGO.GetComponent<IngredientSlotUI>();
+            if (slotScript != null)
+            {
+                slotScript.SetData(ing.item, ing.count);
+            }
         }
-        
-        if (ingredientsText != null)
-            ingredientsText.text = list;
     }
 
     void OnCraftButtonDown()
